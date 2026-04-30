@@ -9,6 +9,7 @@
     "test:e2e:headed": "playwright test --headed",
     "test:watch": "vitest",
     "fixtures:capture": "node scripts/capture-youtube-fixtures.js",
+    "fixtures:capture:auth": "set AUTH_PROFILE=1&& node scripts/capture-youtube-fixtures.js",
     "profile:open": "node scripts/open-auth-profile.js",
     "profile:open:chrome": "node scripts/open-auth-profile-chrome.js"
   },

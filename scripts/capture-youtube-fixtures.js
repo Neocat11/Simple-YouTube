@@ -4,8 +4,25 @@ const { chromium } = require("@playwright/test");
 
 const outputDir = path.resolve(__dirname, "..", "tests", "fixtures", "youtube");
 const artifactDir = path.resolve(__dirname, "..", "test-results", "fixture-capture");
+const authProfilePath = path.resolve(__dirname, "..", ".playwright-user-profile");
+const useAuthProfile = process.env.AUTH_PROFILE === "1";
 
 const fixtureSpecs = [
+  ...(useAuthProfile
+    ? [
+        {
+          name: "home-rich-item",
+          url: "https://www.youtube.com/",
+          selector: 'ytd-rich-item-renderer:has(a[href^="/watch"]):not(:has(ytd-ad-slot-renderer)):not(:has(a[href^="/pagead/"]))'
+        },
+        {
+          name: "home-shorts-lockup",
+          url: "https://www.youtube.com/",
+          selector: ':is(ytd-rich-item-renderer, ytm-shorts-lockup-view-model):has(a[href^="/shorts/"])',
+          optional: true
+        }
+      ]
+    : []),
   {
     name: "search-video-renderer",
     url: "https://www.youtube.com/results?search_query=lofi",
@@ -33,15 +50,33 @@ async function main() {
 
   await fs.mkdir(artifactDir, { recursive: true });
 
-  const browser = await chromium.launch({
-    channel: "chromium",
-    headless: process.env.HEADED !== "1"
-  });
-  const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+  const browser = useAuthProfile
+    ? await chromium.launchPersistentContext(authProfilePath, {
+        channel: "chrome",
+        headless: false,
+        viewport: { width: 1440, height: 1000 }
+      })
+    : await chromium.launch({
+        channel: "chromium",
+        headless: process.env.HEADED !== "1"
+      });
+  const page = useAuthProfile
+    ? browser.pages()[0] || await browser.newPage()
+    : await browser.newPage({ viewport: { width: 1440, height: 1000 } });
 
   try {
     for (const spec of fixtureSpecs) {
-      const html = await captureFixture(page, spec);
+      const html = await captureFixture(page, spec).catch((error) => {
+        if (spec.optional) {
+          console.warn(`skipped optional ${spec.name}: ${error.message}`);
+          return null;
+        }
+
+        throw error;
+      });
+      if (!html) {
+        continue;
+      }
       const filePath = path.join(outputDir, `${spec.name}.html`);
       await fs.writeFile(filePath, html, "utf8");
       console.log(`captured ${spec.name}`);

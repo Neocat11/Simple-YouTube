@@ -10,6 +10,16 @@ const core = require("../src/core.js");
 const fixtureDir = path.resolve("tests", "fixtures", "youtube");
 const fixtures = [
   {
+    file: "home-rich-item.html",
+    kind: "video",
+    titleSelector: "a.ytLockupMetadataViewModelTitle, a#video-title"
+  },
+  {
+    file: "home-shorts-lockup.html",
+    kind: "shorts",
+    titleSelector: 'a[href^="/shorts/"]'
+  },
+  {
     file: "search-video-renderer.html",
     kind: "video",
     titleSelector: "a#video-title, a.ytLockupMetadataViewModelTitle"
@@ -22,7 +32,7 @@ const fixtures = [
   {
     file: "watch-video-lockup.html",
     kind: "video",
-    titleSelector: "a.ytLockupMetadataViewModelTitle"
+    titleSelector: 'a.ytLockupMetadataViewModelTitle, a[href^="/watch"]'
   },
   {
     file: "watch-shorts-lockup.html",

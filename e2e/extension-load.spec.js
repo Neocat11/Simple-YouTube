@@ -20,6 +20,9 @@ test("extension loads and popup renders the MVP toggle", async () => {
 
     await page.reload();
     await expect(toggle).not.toBeChecked();
+
+    await page.getByText("SIMPLE YOUTUBEを有効化？").click();
+    await expect(toggle).toBeChecked();
   } finally {
     await context.close();
   }
