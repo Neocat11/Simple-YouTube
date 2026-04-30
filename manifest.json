@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "Simple-YouTube",
+  "version": "0.1.0",
+  "description": "Hide YouTube thumbnails and reduce Shorts distractions.",
+  "permissions": ["storage"],
+  "action": {
+    "default_title": "Simple-YouTube",
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.youtube.com/*"],
+      "css": ["src/content.css"],
+      "js": ["src/core.js", "src/content.js"],
+      "run_at": "document_start"
+    }
+  ],
+  "host_permissions": ["https://www.youtube.com/*"]
+}
+

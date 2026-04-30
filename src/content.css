@@ -1,0 +1,45 @@
+html.simple-youtube-enabled :is(
+  ytd-video-renderer,
+  ytd-rich-item-renderer,
+  ytd-compact-video-renderer,
+  ytd-grid-video-renderer,
+  ytd-playlist-video-renderer,
+  ytd-reel-item-renderer,
+  yt-lockup-view-model,
+  ytm-shorts-lockup-view-model
+) :is(ytd-thumbnail, yt-thumbnail-view-model, a#thumbnail) {
+  background: Canvas !important;
+}
+
+html.simple-youtube-enabled :is(
+  ytd-video-renderer,
+  ytd-rich-item-renderer,
+  ytd-compact-video-renderer,
+  ytd-grid-video-renderer,
+  ytd-playlist-video-renderer,
+  ytd-reel-item-renderer,
+  yt-lockup-view-model,
+  ytm-shorts-lockup-view-model
+) :is(ytd-thumbnail, yt-thumbnail-view-model, a#thumbnail) :is(img, picture, video, yt-image, yt-img-shadow, .yt-core-image) {
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+html.simple-youtube-enabled :is(
+  ytd-video-renderer,
+  ytd-rich-item-renderer,
+  ytd-compact-video-renderer,
+  ytd-grid-video-renderer,
+  ytd-playlist-video-renderer,
+  ytd-reel-item-renderer,
+  yt-lockup-view-model,
+  ytm-shorts-lockup-view-model
+) :is(ytd-thumbnail-overlay-time-status-renderer, ytd-thumbnail-overlay-now-playing-renderer, ytd-thumbnail-overlay-resume-playback-renderer) {
+  display: none !important;
+}
+
+html.simple-youtube-enabled [data-simple-youtube-shorts="true"] :is(.ShortsLockupViewModelHostThumbnail, .ShortsLockupViewModelHostThumbnailContainer, img[src*="/oar2."]) {
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
