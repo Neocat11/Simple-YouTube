@@ -12,6 +12,13 @@ html.simple-youtube-enabled :is(
 }
 
 html.simple-youtube-enabled :is(
+  yt-lockup-view-model,
+  ytm-shorts-lockup-view-model
+) :is(.ytLockupViewModelContentImage, .shortsLockupViewModelHostThumbnailParentContainer) {
+  background: Canvas !important;
+}
+
+html.simple-youtube-enabled :is(
   ytd-video-renderer,
   ytd-rich-item-renderer,
   ytd-compact-video-renderer,
@@ -21,6 +28,14 @@ html.simple-youtube-enabled :is(
   yt-lockup-view-model,
   ytm-shorts-lockup-view-model
 ) :is(ytd-thumbnail, yt-thumbnail-view-model, a#thumbnail) :is(img, picture, video, yt-image, yt-img-shadow, .yt-core-image) {
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+html.simple-youtube-enabled :is(
+  yt-lockup-view-model,
+  ytm-shorts-lockup-view-model
+) :is(.ytLockupViewModelContentImage, .shortsLockupViewModelHostThumbnailParentContainer) :is(img, picture, video, yt-image, yt-img-shadow, .yt-core-image, .ytCoreImageHost) {
   opacity: 0 !important;
   visibility: hidden !important;
 }
@@ -42,4 +57,3 @@ html.simple-youtube-enabled [data-simple-youtube-shorts="true"] :is(.ShortsLocku
   opacity: 0 !important;
   visibility: hidden !important;
 }
-

@@ -10,6 +10,32 @@
 })(typeof globalThis !== "undefined" ? globalThis : this, function () {
   const ENABLED_CLASS = "simple-youtube-enabled";
   const PROCESSED_ATTR = "data-simple-youtube-processed";
+  const RENDERER_SELECTOR = [
+    "ytd-video-renderer",
+    "ytd-rich-item-renderer",
+    "ytd-compact-video-renderer",
+    "ytd-grid-video-renderer",
+    "ytd-playlist-video-renderer",
+    "ytd-reel-item-renderer",
+    "yt-lockup-view-model",
+    "ytm-shorts-lockup-view-model"
+  ].join(", ");
+  const THUMBNAIL_CONTAINER_SELECTOR = [
+    "ytd-thumbnail",
+    "yt-thumbnail-view-model",
+    "a#thumbnail",
+    ".ytLockupViewModelContentImage",
+    ".shortsLockupViewModelHostThumbnailParentContainer"
+  ].join(", ");
+  const THUMBNAIL_MEDIA_SELECTOR = [
+    "img",
+    "picture",
+    "video",
+    "yt-image",
+    "yt-img-shadow",
+    ".yt-core-image",
+    ".ytCoreImageHost"
+  ].join(", ");
 
   function isShortsUrl(value) {
     if (!value || typeof value !== "string") {
@@ -51,9 +77,7 @@
       elements.push(rootNode);
     }
 
-    rootNode
-      .querySelectorAll?.("ytd-video-renderer, ytd-rich-item-renderer, ytd-compact-video-renderer, ytd-grid-video-renderer, ytd-playlist-video-renderer, ytd-reel-item-renderer, yt-lockup-view-model, ytm-shorts-lockup-view-model")
-      .forEach((element) => elements.push(element));
+    rootNode.querySelectorAll?.(RENDERER_SELECTOR).forEach((element) => elements.push(element));
 
     elements.forEach((element) => {
       element.setAttribute(PROCESSED_ATTR, "true");
@@ -66,18 +90,46 @@
   }
 
   function isProcessableElement(element) {
-    return element.matches?.(
-      "ytd-video-renderer, ytd-rich-item-renderer, ytd-compact-video-renderer, ytd-grid-video-renderer, ytd-playlist-video-renderer, ytd-reel-item-renderer, yt-lockup-view-model, ytm-shorts-lockup-view-model"
-    );
+    return element.matches?.(RENDERER_SELECTOR);
+  }
+
+  function getThumbnailContainers(rootNode) {
+    return Array.from(rootNode?.querySelectorAll?.(scopeSelector(RENDERER_SELECTOR, THUMBNAIL_CONTAINER_SELECTOR)) || []);
+  }
+
+  function getThumbnailMedia(rootNode) {
+    return getThumbnailContainers(rootNode).flatMap((container) => {
+      const media = [];
+
+      if (container.matches?.(THUMBNAIL_MEDIA_SELECTOR)) {
+        media.push(container);
+      }
+
+      media.push(...Array.from(container.querySelectorAll?.(THUMBNAIL_MEDIA_SELECTOR) || []));
+      return media;
+    });
+  }
+
+  function scopeSelector(parentSelector, childSelector) {
+    const parents = parentSelector.split(",").map((selector) => selector.trim());
+    const children = childSelector.split(",").map((selector) => selector.trim());
+
+    return parents
+      .flatMap((parent) => children.map((child) => `${parent} ${child}`))
+      .join(", ");
   }
 
   return {
     ENABLED_CLASS,
     PROCESSED_ATTR,
+    RENDERER_SELECTOR,
+    THUMBNAIL_CONTAINER_SELECTOR,
+    THUMBNAIL_MEDIA_SELECTOR,
+    getThumbnailContainers,
+    getThumbnailMedia,
     getStoredEnabled,
     isShortsUrl,
     markProcessed,
     setEnabledClass
   };
 });
-
