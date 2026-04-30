@@ -129,6 +129,11 @@ test.describe("layout health", () => {
             height: rect.height,
             width: rect.width,
             titleVisible: Boolean(titleRect && titleRect.width > 0 && titleRect.height > 0),
+            thumbnailSpaceVisible: Array.from(item.querySelectorAll("yt-thumbnail-view-model, .ytLockupViewModelContentImage, ytd-thumbnail, a#thumbnail")).some((thumbnail) => {
+              const style = getComputedStyle(thumbnail);
+              const thumbnailRect = thumbnail.getBoundingClientRect();
+              return style.display !== "none" && thumbnailRect.width > 30 && thumbnailRect.height > 30;
+            }),
             thumbnailVisible: Array.from(item.querySelectorAll("yt-thumbnail-view-model img, .ytLockupViewModelContentImage img, ytd-thumbnail img")).some((img) => {
               const style = getComputedStyle(img);
               const imageRect = img.getBoundingClientRect();
@@ -141,8 +146,9 @@ test.describe("layout health", () => {
       expect(result.length).toBeGreaterThan(0);
       for (const rect of result) {
         expect(rect.height).toBeGreaterThan(40);
-        expect(rect.height).toBeLessThan(420);
+        expect(rect.height).toBeLessThan(140);
         expect(rect.titleVisible).toBe(true);
+        expect(rect.thumbnailSpaceVisible).toBe(false);
         expect(rect.thumbnailVisible).toBe(false);
       }
     } finally {
