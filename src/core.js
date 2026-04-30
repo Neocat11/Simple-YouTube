@@ -9,6 +9,7 @@
   root.SimpleYouTubeCore = api;
 })(typeof globalThis !== "undefined" ? globalThis : this, function () {
   const ENABLED_CLASS = "simple-youtube-enabled";
+  const PAGE_CLASS_PREFIX = "simple-youtube-page-";
   const PROCESSED_ATTR = "data-simple-youtube-processed";
   const RENDERER_SELECTOR = [
     "ytd-video-renderer",
@@ -66,6 +67,55 @@
     documentRef.documentElement.classList.toggle(ENABLED_CLASS, Boolean(enabled));
   }
 
+  function getPageType(locationLike) {
+    const pathname = locationLike?.pathname || "/";
+
+    if (pathname === "/" || pathname === "") {
+      return "home";
+    }
+
+    if (pathname === "/results") {
+      return "search";
+    }
+
+    if (pathname === "/watch") {
+      return "watch";
+    }
+
+    if (pathname.startsWith("/shorts/")) {
+      return "shorts";
+    }
+
+    if (pathname.startsWith("/feed/subscriptions")) {
+      return "subscriptions";
+    }
+
+    if (pathname.startsWith("/@") || pathname.startsWith("/channel/") || pathname.startsWith("/c/")) {
+      return "channel";
+    }
+
+    if (pathname === "/playlist") {
+      return "playlist";
+    }
+
+    return "other";
+  }
+
+  function setPageTypeClass(documentRef, locationLike) {
+    if (!documentRef || !documentRef.documentElement) {
+      return;
+    }
+
+    const pageType = getPageType(locationLike);
+    const classList = documentRef.documentElement.classList;
+
+    Array.from(classList)
+      .filter((className) => className.startsWith(PAGE_CLASS_PREFIX))
+      .forEach((className) => classList.remove(className));
+
+    classList.add(`${PAGE_CLASS_PREFIX}${pageType}`);
+  }
+
   function markProcessed(rootNode) {
     if (!rootNode || rootNode.nodeType !== 1) {
       return 0;
@@ -121,6 +171,7 @@
 
   return {
     ENABLED_CLASS,
+    PAGE_CLASS_PREFIX,
     PROCESSED_ATTR,
     RENDERER_SELECTOR,
     THUMBNAIL_CONTAINER_SELECTOR,
@@ -128,8 +179,10 @@
     getThumbnailContainers,
     getThumbnailMedia,
     getStoredEnabled,
+    getPageType,
     isShortsUrl,
     markProcessed,
+    setPageTypeClass,
     setEnabledClass
   };
 });

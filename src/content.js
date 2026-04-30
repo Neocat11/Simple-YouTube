@@ -8,6 +8,7 @@
 
   function apply(rootNode) {
     core.setEnabledClass(document, enabled);
+    core.setPageTypeClass(document, globalThis.location);
 
     if (enabled) {
       core.markProcessed(rootNode || document.documentElement);
@@ -73,4 +74,3 @@
   readInitialState();
   observePage();
 })();
-

@@ -20,14 +20,17 @@ test("hides thumbnails on authenticated YouTube home", async () => {
       .first();
     await expect(homeVideo).toBeVisible({ timeout: 45_000 });
     await page.addStyleTag({ path: path.resolve(__dirname, "..", "src", "content.css") });
-    await page.evaluate(() => document.documentElement.classList.add("simple-youtube-enabled"));
+    await page.evaluate(() => document.documentElement.classList.add("simple-youtube-enabled", "simple-youtube-page-home"));
     await expect(homeVideo.locator("a.ytLockupMetadataViewModelTitle, a#video-title").first()).toBeVisible();
     const homeThumbnail = homeVideo.locator(".ytLockupViewModelContentImage img, yt-thumbnail-view-model img, ytd-thumbnail img").first();
     await expect(homeThumbnail).toHaveCSS("visibility", "hidden");
-    await expect(homeVideo.locator(".ytLockupViewModelContentImage, yt-thumbnail-view-model, ytd-thumbnail").first()).toHaveCSS("position", "absolute");
+    const homeVideoBoxBeforeHover = await homeVideo.boundingBox();
     await homeVideo.hover();
     await expect(homeThumbnail).toHaveCSS("visibility", "hidden");
-    await expect(page.locator("ytd-video-preview").first()).toBeVisible({ timeout: 10_000 });
+    await expect(homeVideo.locator("a.ytLockupMetadataViewModelTitle, a#video-title").first()).toBeVisible();
+    const homeVideoBoxAfterHover = await homeVideo.boundingBox();
+    expect(homeVideoBoxAfterHover.height).toBeGreaterThan(20);
+    expect(Math.abs(homeVideoBoxAfterHover.height - homeVideoBoxBeforeHover.height)).toBeLessThan(80);
 
     await expect(homeVideo.locator("yt-thumbnail-bottom-overlay-view-model, ytd-thumbnail-overlay-time-status-renderer").first()).toBeHidden();
   } finally {

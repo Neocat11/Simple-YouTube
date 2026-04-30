@@ -18,11 +18,14 @@ test("hides thumbnails on live YouTube search results and watch recommendations"
     await expect(searchVideo.locator("a#video-title, a.ytLockupMetadataViewModelTitle").first()).toBeVisible();
     const searchVideoThumbnail = searchVideo.locator("ytd-thumbnail img, a#thumbnail img").first();
     await expect(searchVideoThumbnail).toHaveCSS("visibility", "hidden");
-    await expect(searchVideo.locator("ytd-thumbnail, a#thumbnail").first()).toHaveCSS("position", "absolute");
     await expect(searchVideo.locator("ytd-thumbnail-overlay-time-status-renderer, yt-thumbnail-bottom-overlay-view-model").first()).toBeHidden();
+    const searchVideoBoxBeforeHover = await searchVideo.boundingBox();
     await searchVideo.hover();
     await expect(searchVideoThumbnail).toHaveCSS("visibility", "hidden");
-    await expect(page.locator("ytd-video-preview").first()).toBeVisible({ timeout: 10_000 });
+    await expect(searchVideo.locator("a#video-title, a.ytLockupMetadataViewModelTitle").first()).toBeVisible();
+    const searchVideoBoxAfterHover = await searchVideo.boundingBox();
+    expect(searchVideoBoxAfterHover.height).toBeGreaterThan(20);
+    expect(Math.abs(searchVideoBoxAfterHover.height - searchVideoBoxBeforeHover.height)).toBeLessThan(80);
 
     const searchShorts = page.locator('ytm-shorts-lockup-view-model:has(a[href^="/shorts/"])').first();
     await expect(searchShorts).toBeVisible({ timeout: 45_000 });
@@ -44,9 +47,13 @@ test("hides thumbnails on live YouTube search results and watch recommendations"
     await expect(watchVideo.locator("a.ytLockupMetadataViewModelTitle, h3 a").first()).toBeVisible();
     const watchThumbnail = watchVideo.locator(".ytLockupViewModelContentImage img, yt-thumbnail-view-model img").first();
     await expect(watchThumbnail).toHaveCSS("visibility", "hidden");
-    await expect(watchVideo.locator(".ytLockupViewModelContentImage, yt-thumbnail-view-model").first()).toHaveCSS("position", "absolute");
+    const watchVideoBoxBeforeHover = await watchVideo.boundingBox();
     await watchVideo.hover();
     await expect(watchThumbnail).toHaveCSS("visibility", "hidden");
+    await expect(watchVideo.locator("a.ytLockupMetadataViewModelTitle, h3 a").first()).toBeVisible();
+    const watchVideoBoxAfterHover = await watchVideo.boundingBox();
+    expect(watchVideoBoxAfterHover.height).toBeGreaterThan(20);
+    expect(Math.abs(watchVideoBoxAfterHover.height - watchVideoBoxBeforeHover.height)).toBeLessThan(80);
   } finally {
     await context.close();
   }

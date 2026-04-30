@@ -29,6 +29,27 @@ describe("SimpleYouTubeCore", () => {
     expect(dom.window.document.documentElement.classList.contains(core.ENABLED_CLASS)).toBe(false);
   });
 
+  test("classifies YouTube page types", () => {
+    expect(core.getPageType(new URL("https://www.youtube.com/"))).toBe("home");
+    expect(core.getPageType(new URL("https://www.youtube.com/results?search_query=lofi"))).toBe("search");
+    expect(core.getPageType(new URL("https://www.youtube.com/watch?v=abc123"))).toBe("watch");
+    expect(core.getPageType(new URL("https://www.youtube.com/shorts/abc123"))).toBe("shorts");
+    expect(core.getPageType(new URL("https://www.youtube.com/feed/subscriptions"))).toBe("subscriptions");
+    expect(core.getPageType(new URL("https://www.youtube.com/@example/videos"))).toBe("channel");
+    expect(core.getPageType(new URL("https://www.youtube.com/playlist?list=abc123"))).toBe("playlist");
+  });
+
+  test("sets a single page type class", () => {
+    const dom = new JSDOM("<!doctype html><html><body></body></html>");
+
+    core.setPageTypeClass(dom.window.document, new URL("https://www.youtube.com/results?search_query=lofi"));
+    expect(dom.window.document.documentElement.classList.contains("simple-youtube-page-search")).toBe(true);
+
+    core.setPageTypeClass(dom.window.document, new URL("https://www.youtube.com/watch?v=abc123"));
+    expect(dom.window.document.documentElement.classList.contains("simple-youtube-page-search")).toBe(false);
+    expect(dom.window.document.documentElement.classList.contains("simple-youtube-page-watch")).toBe(true);
+  });
+
   test("marks processable renderers without touching channel avatars", () => {
     const dom = new JSDOM(`
       <ytd-rich-item-renderer>
