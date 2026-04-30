@@ -16,7 +16,8 @@ const surfaces = [
     url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
     pageClass: "simple-youtube-page-watch",
     itemSelector: 'yt-lockup-view-model:has(a[href^="/watch"])',
-    titleSelector: "a.ytLockupMetadataViewModelTitle, h3 a"
+    titleSelector: "a.ytLockupMetadataViewModelTitle, h3 a",
+    compactList: true
   }
 ];
 

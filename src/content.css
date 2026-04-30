@@ -72,6 +72,66 @@ html.simple-youtube-enabled.simple-youtube-page-search ytd-video-renderer :is(
   display: none !important;
 }
 
+html.simple-youtube-enabled.simple-youtube-page-watch yt-lockup-view-model {
+  display: block !important;
+  width: 100% !important;
+  margin: 0 !important;
+  border-bottom: 1px solid var(--simple-youtube-border) !important;
+}
+
+html.simple-youtube-enabled.simple-youtube-page-watch yt-lockup-view-model:hover {
+  background: var(--simple-youtube-hover) !important;
+}
+
+html.simple-youtube-enabled.simple-youtube-page-watch yt-lockup-view-model .ytLockupViewModelHost {
+  display: grid !important;
+  grid-template-columns: minmax(160px, 1fr) 32px !important;
+  align-items: center !important;
+  gap: 8px !important;
+  min-height: 44px !important;
+  padding: 6px 4px !important;
+  box-sizing: border-box !important;
+}
+
+html.simple-youtube-enabled.simple-youtube-page-watch yt-lockup-view-model :is(
+  .ytLockupViewModelContentImage,
+  yt-thumbnail-view-model
+) {
+  display: none !important;
+}
+
+html.simple-youtube-enabled.simple-youtube-page-watch yt-lockup-view-model :is(
+  .ytLockupViewModelMetadata,
+  .ytLockupMetadataViewModelTextContainer,
+  .ytLockupMetadataViewModelMetadata,
+  yt-content-metadata-view-model
+) {
+  min-width: 0 !important;
+}
+
+html.simple-youtube-enabled.simple-youtube-page-watch yt-lockup-view-model :is(
+  h3,
+  .ytLockupMetadataViewModelTitle
+) {
+  display: block !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  line-height: 1.35 !important;
+}
+
+html.simple-youtube-enabled.simple-youtube-page-watch yt-lockup-view-model .ytLockupMetadataViewModelMetadata {
+  color: var(--simple-youtube-muted) !important;
+  overflow: hidden !important;
+}
+
+html.simple-youtube-enabled.simple-youtube-page-watch yt-lockup-view-model .ytContentMetadataViewModelMetadataRow {
+  display: inline !important;
+  white-space: nowrap !important;
+}
+
 html.simple-youtube-enabled :is(
   ytd-video-renderer,
   ytd-rich-item-renderer,
