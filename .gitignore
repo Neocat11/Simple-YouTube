@@ -4,4 +4,7 @@ dist/
 .vite/
 playwright-report/
 test-results/
+.playwright-user-profile/
+playwright/.auth/
+*.storageState.json
 *.log
