@@ -4,10 +4,13 @@
   "private": true,
   "description": "Chrome extension that hides YouTube thumbnails for a quieter browsing experience.",
   "scripts": {
-    "test": "vitest run",
+    "test": "vitest run tests",
+    "test:e2e": "playwright test",
+    "test:e2e:headed": "playwright test --headed",
     "test:watch": "vitest"
   },
   "devDependencies": {
+    "@playwright/test": "^1.59.1",
     "jsdom": "^24.1.3",
     "vitest": "^4.1.5"
   }

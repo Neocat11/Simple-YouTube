@@ -8,6 +8,9 @@
     "default_title": "Simple-YouTube",
     "default_popup": "popup.html"
   },
+  "background": {
+    "service_worker": "src/background.js"
+  },
   "content_scripts": [
     {
       "matches": ["https://www.youtube.com/*"],
@@ -18,4 +21,3 @@
   ],
   "host_permissions": ["https://www.youtube.com/*"]
 }
-
