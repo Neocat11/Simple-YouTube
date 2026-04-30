@@ -1,5 +1,75 @@
 html.simple-youtube-enabled {
+  --simple-youtube-avatar-size: 32px;
+  --simple-youtube-border: color-mix(in srgb, CanvasText 12%, transparent);
+  --simple-youtube-muted: color-mix(in srgb, CanvasText 62%, Canvas);
+  --simple-youtube-hover: color-mix(in srgb, CanvasText 7%, Canvas);
   --simple-youtube-preview-radius: 6px;
+}
+
+html.simple-youtube-enabled.simple-youtube-page-search ytd-video-renderer {
+  display: block !important;
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  border-bottom: 1px solid var(--simple-youtube-border) !important;
+}
+
+html.simple-youtube-enabled.simple-youtube-page-search ytd-video-renderer:hover {
+  background: var(--simple-youtube-hover) !important;
+}
+
+html.simple-youtube-enabled.simple-youtube-page-search ytd-video-renderer #dismissible {
+  display: grid !important;
+  grid-template-columns: minmax(220px, 1fr) minmax(140px, 22vw) minmax(110px, 16vw) 32px !important;
+  align-items: center !important;
+  gap: 12px !important;
+  min-height: 44px !important;
+  padding: 7px 10px !important;
+  box-sizing: border-box !important;
+}
+
+html.simple-youtube-enabled.simple-youtube-page-search ytd-video-renderer :is(ytd-thumbnail, a#thumbnail) {
+  display: none !important;
+}
+
+html.simple-youtube-enabled.simple-youtube-page-search ytd-video-renderer :is(.text-wrapper, #meta) {
+  display: contents !important;
+}
+
+html.simple-youtube-enabled.simple-youtube-page-search ytd-video-renderer :is(#title-wrapper, h3) {
+  min-width: 0 !important;
+  margin: 0 !important;
+}
+
+html.simple-youtube-enabled.simple-youtube-page-search ytd-video-renderer :is(a#video-title, .ytLockupMetadataViewModelTitle) {
+  display: block !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  line-height: 1.35 !important;
+}
+
+html.simple-youtube-enabled.simple-youtube-page-search ytd-video-renderer ytd-video-meta-block {
+  min-width: 0 !important;
+  color: var(--simple-youtube-muted) !important;
+}
+
+html.simple-youtube-enabled.simple-youtube-page-search ytd-video-renderer ytd-video-meta-block :is(#metadata-line, #byline-container) {
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+html.simple-youtube-enabled.simple-youtube-page-search ytd-video-renderer :is(
+  #description-text,
+  #metadata-snippet-container,
+  .metadata-snippet-text,
+  ytd-expandable-metadata-renderer,
+  ytd-badge-supported-renderer,
+  ytd-search-pyv-renderer
+) {
+  display: none !important;
 }
 
 html.simple-youtube-enabled :is(
@@ -70,4 +140,3 @@ html.simple-youtube-enabled ytd-video-preview :is(
   opacity: 1 !important;
   visibility: visible !important;
 }
-
