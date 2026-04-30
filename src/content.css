@@ -72,6 +72,72 @@ html.simple-youtube-enabled.simple-youtube-page-search ytd-video-renderer :is(
   display: none !important;
 }
 
+html.simple-youtube-enabled.simple-youtube-page-search ytm-shorts-lockup-view-model {
+  display: block !important;
+  width: 100% !important;
+  min-height: 44px !important;
+  margin: 0 !important;
+  border-bottom: 1px solid var(--simple-youtube-border) !important;
+}
+
+html.simple-youtube-enabled.simple-youtube-page-search grid-shelf-view-model:has(ytm-shorts-lockup-view-model) {
+  display: block !important;
+  width: 100% !important;
+}
+
+html.simple-youtube-enabled.simple-youtube-page-search grid-shelf-view-model:has(ytm-shorts-lockup-view-model) .ytGridShelfViewModelGridShelfRow {
+  display: block !important;
+  width: 100% !important;
+}
+
+html.simple-youtube-enabled.simple-youtube-page-search grid-shelf-view-model:has(ytm-shorts-lockup-view-model) .ytGridShelfViewModelGridShelfItem {
+  display: block !important;
+  width: 100% !important;
+}
+
+html.simple-youtube-enabled.simple-youtube-page-search ytm-shorts-lockup-view-model:hover {
+  background: var(--simple-youtube-hover) !important;
+}
+
+html.simple-youtube-enabled.simple-youtube-page-search ytm-shorts-lockup-view-model :is(
+  .reel-item-endpoint,
+  .shortsLockupViewModelHostThumbnailParentContainer,
+  yt-thumbnail-view-model
+) {
+  display: none !important;
+}
+
+html.simple-youtube-enabled.simple-youtube-page-search ytm-shorts-lockup-view-model .shortsLockupViewModelHostOutsideMetadata {
+  display: grid !important;
+  grid-template-columns: minmax(160px, 1fr) 32px !important;
+  align-items: center !important;
+  gap: 8px !important;
+  min-width: 0 !important;
+  padding: 7px 10px !important;
+  box-sizing: border-box !important;
+}
+
+html.simple-youtube-enabled.simple-youtube-page-search ytm-shorts-lockup-view-model :is(
+  .shortsLockupViewModelHostMetadataTitle,
+  .shortsLockupViewModelHostOutsideMetadataEndpoint
+) {
+  display: block !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  line-height: 1.35 !important;
+}
+
+html.simple-youtube-enabled.simple-youtube-page-search ytm-shorts-lockup-view-model .shortsLockupViewModelHostOutsideMetadataSubhead {
+  color: var(--simple-youtube-muted) !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
 html.simple-youtube-enabled.simple-youtube-page-watch yt-lockup-view-model {
   display: block !important;
   width: 100% !important;
@@ -202,6 +268,117 @@ html.simple-youtube-enabled.simple-youtube-page-home ytd-rich-item-renderer .ytL
 html.simple-youtube-enabled.simple-youtube-page-home ytd-rich-item-renderer .ytContentMetadataViewModelMetadataRow {
   display: inline !important;
   white-space: nowrap !important;
+}
+
+html.simple-youtube-enabled:is(.simple-youtube-page-channel, .simple-youtube-page-subscriptions) :is(ytd-rich-grid-renderer, ytd-rich-grid-row) {
+  --ytd-rich-grid-items-per-row: 1 !important;
+}
+
+html.simple-youtube-enabled:is(.simple-youtube-page-channel, .simple-youtube-page-subscriptions) ytd-rich-item-renderer {
+  display: block !important;
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  border-bottom: 1px solid var(--simple-youtube-border) !important;
+}
+
+html.simple-youtube-enabled:is(.simple-youtube-page-channel, .simple-youtube-page-subscriptions) ytd-rich-item-renderer:hover {
+  background: var(--simple-youtube-hover) !important;
+}
+
+html.simple-youtube-enabled:is(.simple-youtube-page-channel, .simple-youtube-page-subscriptions) ytd-rich-item-renderer .ytLockupViewModelHost {
+  display: grid !important;
+  grid-template-columns: minmax(220px, 1fr) 32px !important;
+  align-items: center !important;
+  gap: 10px !important;
+  min-height: 44px !important;
+  padding: 7px 10px !important;
+  box-sizing: border-box !important;
+}
+
+html.simple-youtube-enabled:is(.simple-youtube-page-channel, .simple-youtube-page-subscriptions) ytd-rich-item-renderer :is(
+  ytd-thumbnail,
+  a#thumbnail,
+  yt-thumbnail-view-model,
+  .ytLockupViewModelContentImage
+) {
+  display: none !important;
+}
+
+html.simple-youtube-enabled:is(.simple-youtube-page-channel, .simple-youtube-page-subscriptions) ytd-rich-item-renderer :is(
+  h3,
+  #video-title,
+  .ytLockupMetadataViewModelTitle
+) {
+  display: block !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  line-height: 1.35 !important;
+}
+
+html.simple-youtube-enabled.simple-youtube-page-playlist ytd-playlist-video-renderer {
+  display: grid !important;
+  grid-template-columns: 40px minmax(220px, 1fr) 32px !important;
+  align-items: center !important;
+  gap: 10px !important;
+  width: 100% !important;
+  max-width: none !important;
+  min-height: 44px !important;
+  padding: 7px 10px !important;
+  margin: 0 !important;
+  border-bottom: 1px solid var(--simple-youtube-border) !important;
+  box-sizing: border-box !important;
+}
+
+html.simple-youtube-enabled.simple-youtube-page-playlist ytd-playlist-video-renderer:hover {
+  background: var(--simple-youtube-hover) !important;
+}
+
+html.simple-youtube-enabled.simple-youtube-page-playlist ytd-playlist-video-renderer #content {
+  display: block !important;
+  min-width: 0 !important;
+  width: auto !important;
+  height: auto !important;
+}
+
+html.simple-youtube-enabled.simple-youtube-page-playlist ytd-playlist-video-renderer #index-container {
+  width: auto !important;
+  height: auto !important;
+}
+
+html.simple-youtube-enabled.simple-youtube-page-playlist ytd-playlist-video-renderer :is(
+  ytd-thumbnail,
+  a#thumbnail,
+  yt-thumbnail-view-model
+) {
+  display: none !important;
+}
+
+html.simple-youtube-enabled.simple-youtube-page-playlist ytd-playlist-video-renderer :is(
+  #meta,
+  #video-info,
+  ytd-video-meta-block
+) {
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+html.simple-youtube-enabled.simple-youtube-page-playlist ytd-playlist-video-renderer :is(
+  #video-title,
+  h3
+) {
+  display: block !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  line-height: 1.35 !important;
 }
 
 html.simple-youtube-enabled :is(

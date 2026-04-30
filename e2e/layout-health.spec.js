@@ -12,11 +12,35 @@ const surfaces = [
     compactList: true
   },
   {
+    name: "search shorts",
+    url: "https://www.youtube.com/results?search_query=lofi",
+    pageClass: "simple-youtube-page-search",
+    itemSelector: 'ytm-shorts-lockup-view-model:has(a[href^="/shorts/"])',
+    titleSelector: ".shortsLockupViewModelHostOutsideMetadataEndpoint",
+    compactList: true
+  },
+  {
     name: "watch",
     url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
     pageClass: "simple-youtube-page-watch",
     itemSelector: 'yt-lockup-view-model:has(a[href^="/watch"])',
     titleSelector: "a.ytLockupMetadataViewModelTitle, h3 a",
+    compactList: true
+  },
+  {
+    name: "channel videos",
+    url: "https://www.youtube.com/@YouTube/videos",
+    pageClass: "simple-youtube-page-channel",
+    itemSelector: 'ytd-rich-item-renderer:has(a[href^="/watch"])',
+    titleSelector: "a.ytLockupMetadataViewModelTitle, a#video-title",
+    compactList: true
+  },
+  {
+    name: "playlist videos",
+    url: "https://www.youtube.com/playlist?list=PLFgquLnL59alCl_2TQvOiD5Vgm1hCaGSI",
+    pageClass: "simple-youtube-page-playlist",
+    itemSelector: 'ytd-playlist-video-renderer:has(a[href^="/watch"])',
+    titleSelector: "a#video-title, h3 a",
     compactList: true
   }
 ];
@@ -29,7 +53,9 @@ test.describe("layout health", () => {
       try {
         const page = await context.newPage();
         await page.goto(surface.url, { waitUntil: "domcontentloaded" });
-        await expect(page.locator(surface.itemSelector).first()).toBeVisible({ timeout: 45_000 });
+        const firstItem = page.locator(surface.itemSelector).first();
+        await expect(firstItem).toBeVisible({ timeout: 45_000 });
+        await firstItem.scrollIntoViewIfNeeded();
 
         await expect(page.locator("html")).toHaveClass(new RegExp(surface.pageClass));
 
