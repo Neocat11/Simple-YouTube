@@ -22,13 +22,13 @@ test("hides thumbnails on authenticated YouTube home", async () => {
     await page.addStyleTag({ path: path.resolve(__dirname, "..", "src", "content.css") });
     await page.evaluate(() => document.documentElement.classList.add("simple-youtube-enabled"));
     await expect(homeVideo.locator("a.ytLockupMetadataViewModelTitle, a#video-title").first()).toBeVisible();
-    await expect(homeVideo.locator(".ytLockupViewModelContentImage img, yt-thumbnail-view-model img, ytd-thumbnail img").first()).toHaveCSS("visibility", "hidden");
+    const homeThumbnail = homeVideo.locator(".ytLockupViewModelContentImage img, yt-thumbnail-view-model img, ytd-thumbnail img").first();
+    await expect(homeThumbnail).toHaveCSS("visibility", "hidden");
+    await expect(homeVideo.locator(".ytLockupViewModelContentImage, yt-thumbnail-view-model, ytd-thumbnail").first()).toHaveCSS("position", "absolute");
+    await homeVideo.hover();
+    await expect(homeThumbnail).toHaveCSS("visibility", "visible");
 
-    const shortsCard = page.locator(':is(ytd-rich-item-renderer, ytm-shorts-lockup-view-model):has(a[href^="/shorts/"])').first();
-    if (await shortsCard.count()) {
-      await expect(shortsCard.locator('a[href^="/shorts/"]').last()).toBeVisible();
-      await expect(shortsCard.locator(".shortsLockupViewModelHostThumbnailParentContainer img, yt-thumbnail-view-model img").first()).toHaveCSS("visibility", "hidden");
-    }
+    await expect(homeVideo.locator("yt-thumbnail-bottom-overlay-view-model, ytd-thumbnail-overlay-time-status-renderer").first()).toBeHidden();
   } finally {
     await context.close();
   }
