@@ -26,7 +26,8 @@ test("hides thumbnails on authenticated YouTube home", async () => {
     await expect(homeThumbnail).toHaveCSS("visibility", "hidden");
     await expect(homeVideo.locator(".ytLockupViewModelContentImage, yt-thumbnail-view-model, ytd-thumbnail").first()).toHaveCSS("position", "absolute");
     await homeVideo.hover();
-    await expect(homeThumbnail).toHaveCSS("visibility", "visible");
+    await expect(homeThumbnail).toHaveCSS("visibility", "hidden");
+    await expect(page.locator("ytd-video-preview").first()).toBeVisible({ timeout: 10_000 });
 
     await expect(homeVideo.locator("yt-thumbnail-bottom-overlay-view-model, ytd-thumbnail-overlay-time-status-renderer").first()).toBeHidden();
   } finally {

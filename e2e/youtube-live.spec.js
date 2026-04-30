@@ -21,7 +21,8 @@ test("hides thumbnails on live YouTube search results and watch recommendations"
     await expect(searchVideo.locator("ytd-thumbnail, a#thumbnail").first()).toHaveCSS("position", "absolute");
     await expect(searchVideo.locator("ytd-thumbnail-overlay-time-status-renderer, yt-thumbnail-bottom-overlay-view-model").first()).toBeHidden();
     await searchVideo.hover();
-    await expect(searchVideoThumbnail).toHaveCSS("visibility", "visible");
+    await expect(searchVideoThumbnail).toHaveCSS("visibility", "hidden");
+    await expect(page.locator("ytd-video-preview").first()).toBeVisible({ timeout: 10_000 });
 
     const searchShorts = page.locator('ytm-shorts-lockup-view-model:has(a[href^="/shorts/"])').first();
     await expect(searchShorts).toBeVisible({ timeout: 45_000 });
@@ -30,7 +31,7 @@ test("hides thumbnails on live YouTube search results and watch recommendations"
     await page.mouse.move(5, 5);
     await expect(searchShortsThumbnail).toHaveCSS("visibility", "hidden");
     await searchShorts.hover();
-    await expect(searchShortsThumbnail).toHaveCSS("visibility", "visible");
+    await expect(searchShortsThumbnail).toHaveCSS("visibility", "hidden");
 
     await page.goto("https://www.youtube.com/watch?v=dQw4w9WgXcQ", { waitUntil: "domcontentloaded" });
     await dismissConsentIfPresent(page);
@@ -45,7 +46,7 @@ test("hides thumbnails on live YouTube search results and watch recommendations"
     await expect(watchThumbnail).toHaveCSS("visibility", "hidden");
     await expect(watchVideo.locator(".ytLockupViewModelContentImage, yt-thumbnail-view-model").first()).toHaveCSS("position", "absolute");
     await watchVideo.hover();
-    await expect(watchThumbnail).toHaveCSS("visibility", "visible");
+    await expect(watchThumbnail).toHaveCSS("visibility", "hidden");
   } finally {
     await context.close();
   }

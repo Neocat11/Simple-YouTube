@@ -170,54 +170,6 @@ html.simple-youtube-enabled :is(
   ytd-rich-item-renderer,
   ytd-compact-video-renderer,
   ytd-grid-video-renderer,
-  ytd-playlist-video-renderer,
-  ytd-reel-item-renderer,
-  yt-lockup-view-model,
-  ytm-shorts-lockup-view-model
-):hover :is(ytd-thumbnail, yt-thumbnail-view-model, a#thumbnail, .ytLockupViewModelContentImage, .shortsLockupViewModelHostThumbnailParentContainer),
-html.simple-youtube-enabled :is(
-  ytd-video-renderer,
-  ytd-rich-item-renderer,
-  ytd-compact-video-renderer,
-  ytd-grid-video-renderer,
-  ytd-playlist-video-renderer,
-  ytd-reel-item-renderer,
-  yt-lockup-view-model,
-  ytm-shorts-lockup-view-model
-):focus-within :is(ytd-thumbnail, yt-thumbnail-view-model, a#thumbnail, .ytLockupViewModelContentImage, .shortsLockupViewModelHostThumbnailParentContainer) {
-  opacity: 1 !important;
-  visibility: visible !important;
-}
-
-html.simple-youtube-enabled :is(
-  ytd-video-renderer,
-  ytd-rich-item-renderer,
-  ytd-compact-video-renderer,
-  ytd-grid-video-renderer,
-  ytd-playlist-video-renderer,
-  ytd-reel-item-renderer,
-  yt-lockup-view-model,
-  ytm-shorts-lockup-view-model
-):hover :is(ytd-thumbnail, yt-thumbnail-view-model, a#thumbnail, .ytLockupViewModelContentImage, .shortsLockupViewModelHostThumbnailParentContainer) :is(img, picture, video, yt-image, yt-img-shadow, .yt-core-image, .ytCoreImageHost),
-html.simple-youtube-enabled :is(
-  ytd-video-renderer,
-  ytd-rich-item-renderer,
-  ytd-compact-video-renderer,
-  ytd-grid-video-renderer,
-  ytd-playlist-video-renderer,
-  ytd-reel-item-renderer,
-  yt-lockup-view-model,
-  ytm-shorts-lockup-view-model
-):focus-within :is(ytd-thumbnail, yt-thumbnail-view-model, a#thumbnail, .ytLockupViewModelContentImage, .shortsLockupViewModelHostThumbnailParentContainer) :is(img, picture, video, yt-image, yt-img-shadow, .yt-core-image, .ytCoreImageHost) {
-  opacity: 1 !important;
-  visibility: visible !important;
-}
-
-html.simple-youtube-enabled :is(
-  ytd-video-renderer,
-  ytd-rich-item-renderer,
-  ytd-compact-video-renderer,
-  ytd-grid-video-renderer,
   ytd-playlist-video-renderer
 ) :is(#avatar, #channel-thumbnail, .ytLockupMetadataViewModelAvatar, yt-decorated-avatar-view-model, yt-avatar-shape) {
   grid-column: 1 !important;
@@ -322,4 +274,24 @@ html.simple-youtube-enabled :is(
   .ytBadgeShapeThumbnailLive
 ) {
   display: none !important;
+}
+
+html.simple-youtube-enabled ytd-video-preview {
+  z-index: 10000 !important;
+  overflow: hidden !important;
+  border-radius: var(--simple-youtube-preview-radius) !important;
+  box-shadow: 0 8px 28px color-mix(in srgb, CanvasText 22%, transparent) !important;
+  pointer-events: none !important;
+}
+
+html.simple-youtube-enabled ytd-video-preview :is(
+  ytd-thumbnail,
+  a#thumbnail,
+  img,
+  video,
+  #player-container-wrapper,
+  #inline-preview-player
+) {
+  opacity: 1 !important;
+  visibility: visible !important;
 }
