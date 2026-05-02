@@ -135,7 +135,7 @@ const publicCases = [
     id: "playlist.detail-videos",
     url: "https://www.youtube.com/playlist?list=PLFgquLnL59alCl_2TQvOiD5Vgm1hCaGSI",
     pageClass: "simple-youtube-page-playlist",
-    selector: 'ytd-playlist-video-renderer:has(a[href^="/watch"])',
+    selector: "ytd-playlist-video-renderer",
     titleSelector: "a#video-title, h3 a",
     compact: true
   }
@@ -196,7 +196,7 @@ const authCases = [
     id: "you.watch-later",
     url: "https://www.youtube.com/playlist?list=WL",
     pageClass: "simple-youtube-page-playlist",
-    selector: 'ytd-playlist-video-renderer:has(a[href^="/watch"])',
+    selector: "ytd-playlist-video-renderer",
     titleSelector: "a#video-title, h3 a",
     compact: true,
     optional: true
@@ -205,7 +205,7 @@ const authCases = [
     id: "you.liked-videos",
     url: "https://www.youtube.com/playlist?list=LL",
     pageClass: "simple-youtube-page-playlist",
-    selector: 'ytd-playlist-video-renderer:has(a[href^="/watch"])',
+    selector: "ytd-playlist-video-renderer",
     titleSelector: "a#video-title, h3 a",
     compact: true,
     optional: true

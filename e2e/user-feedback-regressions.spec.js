@@ -103,6 +103,30 @@ test("home rich shelf show more preserves collapsed hidden items and expands on 
     });
 
     expect(after).toBeGreaterThan(before.visible);
+
+    const collapsed = await shelf.evaluate(async (element) => {
+      const lessLabel = "\u4e00\u90e8\u3092\u8868\u793a";
+      const buttons = Array.from(element.querySelectorAll(".expand-collapse-button button"));
+      const button = buttons.find((candidate) => {
+        const rect = candidate.getBoundingClientRect();
+        return candidate.getAttribute("aria-label")?.includes(lessLabel) && rect.width > 0 && rect.height > 0;
+      });
+      button?.click();
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
+      const items = Array.from(element.querySelectorAll("ytd-rich-item-renderer"));
+      return {
+        clicked: Boolean(button),
+        visible: items.filter((item) => {
+          const rect = item.getBoundingClientRect();
+          return getComputedStyle(item).display !== "none" && rect.width > 0 && rect.height > 0;
+        }).length
+      };
+    });
+
+    expect(collapsed.clicked).toBe(true);
+    expect(collapsed.visible).toBeLessThan(after);
+    expect(collapsed.visible).toBe(before.visible);
   } finally {
     await context.close();
   }
@@ -145,6 +169,36 @@ test("channel videos and live tabs use a wider readable row width", async () => 
       const width = await row.evaluate((item) => item.getBoundingClientRect().width);
       expect(width).toBeGreaterThan(500);
       expect(width).toBeLessThanOrEqual(900);
+    }
+  } finally {
+    await context.close();
+  }
+});
+
+test("channel videos and live tabs align with shorts tab row geometry", async () => {
+  const context = await launchWithExtension();
+  try {
+    const page = await context.newPage();
+
+    await page.goto("https://www.youtube.com/@YouTube/shorts", { waitUntil: "domcontentloaded" });
+    const shortsRow = page.locator("ytm-shorts-lockup-view-model").first();
+    await expect(shortsRow).toBeVisible({ timeout: 45_000 });
+    const shortsRect = await shortsRow.evaluate((item) => {
+      const rect = item.getBoundingClientRect();
+      return { left: Math.round(rect.left), width: Math.round(rect.width) };
+    });
+
+    for (const url of ["https://www.youtube.com/@YouTube/videos", "https://www.youtube.com/@YouTube/streams"]) {
+      await page.goto(url, { waitUntil: "domcontentloaded" });
+      const row = page.locator('ytd-rich-item-renderer:has(a[href^="/watch"])').first();
+      await expect(row).toBeVisible({ timeout: 45_000 });
+      const rect = await row.evaluate((item) => {
+        const rect = item.getBoundingClientRect();
+        return { left: Math.round(rect.left), width: Math.round(rect.width) };
+      });
+
+      expect(Math.abs(rect.left - shortsRect.left)).toBeLessThanOrEqual(16);
+      expect(Math.abs(rect.width - shortsRect.width)).toBeLessThanOrEqual(16);
     }
   } finally {
     await context.close();
@@ -231,6 +285,60 @@ test("channel releases tab is left outside Simple-YouTube video compaction", asy
 
     expect(result.imageVisible).toBe(true);
     expect(result.rowWidth).toBeLessThan(500);
+  } finally {
+    await context.close();
+  }
+});
+
+test("channel home tab compacts featured shorts instead of leaving thumbnail cards", async () => {
+  const context = await launchWithExtension();
+  try {
+    const page = await context.newPage();
+    await page.goto("https://www.youtube.com/@YouTube", { waitUntil: "domcontentloaded" });
+    const short = page.locator('ytm-shorts-lockup-view-model:has(a[href^="/shorts/"])').first();
+    await expect(short).toBeVisible({ timeout: 45_000 });
+
+    const result = await short.evaluate((item) => {
+      const rect = item.getBoundingClientRect();
+      const image = item.querySelector("img");
+      const imageRect = image?.getBoundingClientRect();
+      const imageStyle = image ? getComputedStyle(image) : null;
+      return {
+        height: rect.height,
+        width: rect.width,
+        imageVisible: Boolean(imageRect && imageStyle && imageStyle.visibility !== "hidden" && imageStyle.opacity !== "0" && imageRect.width > 30 && imageRect.height > 30)
+      };
+    });
+
+    expect(result.imageVisible).toBe(false);
+    expect(result.height).toBeLessThan(90);
+    expect(result.width).toBeGreaterThan(500);
+  } finally {
+    await context.close();
+  }
+});
+
+test("legacy playlist renderers become single-line simple rows", async () => {
+  const context = await launchWithExtension();
+  try {
+    const page = await context.newPage();
+    await page.goto("https://www.youtube.com/results?search_query=playlist&sp=EgIQAw%253D%253D", { waitUntil: "domcontentloaded" });
+    const playlist = page.locator('yt-lockup-view-model:has(a[href*="list="]), ytd-playlist-renderer:has(a[href*="list="]), ytd-grid-playlist-renderer:has(a[href*="list="])').first();
+    await expect(playlist).toBeVisible({ timeout: 45_000 });
+
+    const result = await playlist.evaluate((item) => {
+      const rect = item.getBoundingClientRect();
+      const thumbnail = item.querySelector("ytd-thumbnail, yt-thumbnail-view-model, yt-collection-thumbnail-view-model, yt-collections-stack, .ytLockupViewModelContentImage");
+      const thumbnailRect = thumbnail?.getBoundingClientRect();
+      const thumbnailStyle = thumbnail ? getComputedStyle(thumbnail) : null;
+      return {
+        height: rect.height,
+        thumbnailSpaceVisible: Boolean(thumbnailRect && thumbnailStyle && thumbnailStyle.display !== "none" && thumbnailRect.width > 30 && thumbnailRect.height > 30)
+      };
+    });
+
+    expect(result.thumbnailSpaceVisible).toBe(false);
+    expect(result.height).toBeLessThan(150);
   } finally {
     await context.close();
   }
