@@ -13,7 +13,7 @@ const surfaces = [
   },
   {
     name: "search shorts",
-    url: "https://www.youtube.com/results?search_query=lofi",
+    url: "https://www.youtube.com/results?search_query=youtube+shorts",
     pageClass: "simple-youtube-page-search",
     itemSelector: 'ytm-shorts-lockup-view-model:has(a[href^="/shorts/"])',
     titleSelector: ".shortsLockupViewModelHostOutsideMetadataEndpoint",
@@ -32,7 +32,7 @@ const surfaces = [
     url: "https://www.youtube.com/@YouTube/videos",
     pageClass: "simple-youtube-page-channel",
     itemSelector: 'ytd-rich-item-renderer:has(a[href^="/watch"])',
-    titleSelector: "a.ytLockupMetadataViewModelTitle, a#video-title",
+    titleSelector: "a.ytLockupMetadataViewModelTitle, a#video-title, h3 a",
     compactList: true
   },
   {
