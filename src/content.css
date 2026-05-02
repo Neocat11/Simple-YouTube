@@ -21,10 +21,11 @@ html.simple-youtube-enabled.simple-youtube-page-search ytd-video-renderer:hover 
 
 html.simple-youtube-enabled.simple-youtube-page-search ytd-video-renderer #dismissible {
   display: block !important;
-  min-height: 52px !important;
-  padding: 8px 10px !important;
+  min-height: 56px !important;
+  padding: 8px 10px 8px 50px !important;
   box-sizing: border-box !important;
-  border-radius: 8px !important;
+  border-bottom: 1px solid var(--simple-youtube-border) !important;
+  position: relative !important;
 }
 
 html.simple-youtube-enabled.simple-youtube-page-search ytd-video-renderer :is(ytd-thumbnail, a#thumbnail) {
@@ -72,9 +73,9 @@ html.simple-youtube-enabled.simple-youtube-page-search ytd-video-renderer :is(#c
 }
 
 html.simple-youtube-enabled.simple-youtube-page-search ytd-video-renderer #channel-info {
-  height: 26px !important;
+  height: 22px !important;
   min-height: 0 !important;
-  margin-top: 4px !important;
+  margin-top: 2px !important;
   align-items: center !important;
   gap: 6px !important;
 }
@@ -84,6 +85,9 @@ html.simple-youtube-enabled.simple-youtube-page-search ytd-video-renderer #chann
   height: 24px !important;
   min-width: 24px !important;
   margin: 0 !important;
+  position: absolute !important;
+  inset-inline-start: 10px !important;
+  inset-block-start: 10px !important;
 }
 
 html.simple-youtube-enabled.simple-youtube-page-search ytd-video-renderer #channel-thumbnail img,
@@ -193,7 +197,7 @@ html.simple-youtube-enabled.simple-youtube-page-search yt-lockup-view-model:has(
   min-height: 52px !important;
   gap: 10px !important;
   padding: 8px 10px !important;
-  border-radius: 8px !important;
+  border-bottom: 1px solid var(--simple-youtube-border) !important;
   box-sizing: border-box !important;
 }
 
@@ -312,6 +316,18 @@ html.simple-youtube-enabled:is(
   max-width: none !important;
   margin: 0 !important;
   border-bottom: 1px solid var(--simple-youtube-border) !important;
+}
+
+html.simple-youtube-enabled ytd-rich-item-renderer[hidden] {
+  display: none !important;
+}
+
+html.simple-youtube-enabled ytd-rich-shelf-renderer:has(ytd-rich-item-renderer[hidden]) .button-container,
+html.simple-youtube-enabled ytd-rich-shelf-renderer:has(ytd-rich-item-renderer[hidden]) .expand-collapse-button {
+  display: flex !important;
+  width: auto !important;
+  height: auto !important;
+  min-height: 36px !important;
 }
 
 html.simple-youtube-enabled:is(
@@ -499,7 +515,7 @@ html.simple-youtube-enabled:is(
   .simple-youtube-page-you,
   .simple-youtube-page-history,
   .simple-youtube-page-shorts
-) yt-lockup-view-model {
+) yt-lockup-view-model:has(a[href^="/watch"], a[href^="/shorts/"], a[href*="list="]) {
   display: block !important;
   width: min(100%, var(--simple-youtube-row-max-width)) !important;
   max-width: var(--simple-youtube-row-max-width) !important;
@@ -514,6 +530,32 @@ html.simple-youtube-enabled.simple-youtube-page-channel ytd-rich-item-renderer {
   max-width: var(--simple-youtube-row-max-width) !important;
 }
 
+html.simple-youtube-enabled.simple-youtube-page-channel yt-lockup-view-model:not(:has(a[href^="/watch"], a[href^="/shorts/"], a[href*="list="])) {
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: initial !important;
+  border-bottom: 0 !important;
+}
+
+html.simple-youtube-enabled.simple-youtube-page-channel yt-lockup-view-model:not(:has(a[href^="/watch"], a[href^="/shorts/"], a[href*="list="])) :is(
+  .ytLockupViewModelContentImage,
+  yt-thumbnail-view-model,
+  yt-collection-thumbnail-view-model,
+  yt-collections-stack
+) {
+  display: initial !important;
+}
+
+html.simple-youtube-enabled.simple-youtube-page-channel yt-lockup-view-model:not(:has(a[href^="/watch"], a[href^="/shorts/"], a[href*="list="])) :is(
+  .ytLockupViewModelContentImage,
+  yt-thumbnail-view-model,
+  yt-collection-thumbnail-view-model,
+  yt-collections-stack
+) :is(img, picture, video, yt-image, yt-img-shadow, .yt-core-image, .ytCoreImageHost) {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
 html.simple-youtube-enabled.simple-youtube-page-channel ytd-rich-grid-renderer #contents,
 html.simple-youtube-enabled.simple-youtube-page-channel ytd-rich-section-renderer #contents {
   align-items: stretch !important;
@@ -525,7 +567,7 @@ html.simple-youtube-enabled:is(
   .simple-youtube-page-you,
   .simple-youtube-page-history,
   .simple-youtube-page-shorts
-) yt-lockup-view-model:hover {
+) yt-lockup-view-model:has(a[href^="/watch"], a[href^="/shorts/"], a[href*="list="]):hover {
   background: var(--simple-youtube-hover) !important;
 }
 
@@ -535,7 +577,7 @@ html.simple-youtube-enabled:is(
   .simple-youtube-page-you,
   .simple-youtube-page-history,
   .simple-youtube-page-shorts
-) yt-lockup-view-model .ytLockupViewModelHost {
+) yt-lockup-view-model:has(a[href^="/watch"], a[href^="/shorts/"], a[href*="list="]) .ytLockupViewModelHost {
   display: grid !important;
   grid-template-columns: minmax(220px, 1fr) 32px !important;
   align-items: center !important;
@@ -551,7 +593,7 @@ html.simple-youtube-enabled:is(
   .simple-youtube-page-you,
   .simple-youtube-page-history,
   .simple-youtube-page-shorts
-) yt-lockup-view-model :is(
+) yt-lockup-view-model:has(a[href^="/watch"], a[href^="/shorts/"], a[href*="list="]) :is(
   ytd-thumbnail,
   a#thumbnail,
   yt-thumbnail-view-model,
@@ -566,7 +608,7 @@ html.simple-youtube-enabled:is(
   .simple-youtube-page-you,
   .simple-youtube-page-history,
   .simple-youtube-page-shorts
-) yt-lockup-view-model :is(
+) yt-lockup-view-model:has(a[href^="/watch"], a[href^="/shorts/"], a[href*="list="]) :is(
   h3,
   #video-title,
   .ytLockupMetadataViewModelTitle
@@ -707,6 +749,90 @@ html.simple-youtube-enabled ytd-video-preview :is(
   #player-container-wrapper,
   #inline-preview-player
 ) {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+html.simple-youtube-enabled.simple-youtube-page-channel :is(
+  ytd-rich-item-renderer,
+  yt-lockup-view-model
+):not(:has(a[href^="/watch"], a[href^="/shorts/"], a[href*="list="])) {
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: initial !important;
+  border-bottom: 0 !important;
+}
+
+html.simple-youtube-enabled.simple-youtube-page-channel :is(
+  ytd-rich-item-renderer,
+  yt-lockup-view-model
+):not(:has(a[href^="/watch"], a[href^="/shorts/"], a[href*="list="])) :is(
+  ytd-thumbnail,
+  yt-thumbnail-view-model,
+  yt-collection-thumbnail-view-model,
+  yt-collections-stack,
+  a#thumbnail,
+  .ytLockupViewModelContentImage
+) {
+  display: initial !important;
+}
+
+html.simple-youtube-enabled.simple-youtube-page-channel :is(
+  ytd-rich-item-renderer,
+  yt-lockup-view-model
+):not(:has(a[href^="/watch"], a[href^="/shorts/"], a[href*="list="])) :is(
+  ytd-thumbnail,
+  yt-thumbnail-view-model,
+  yt-collection-thumbnail-view-model,
+  yt-collections-stack,
+  a#thumbnail,
+  .ytLockupViewModelContentImage
+) :is(img, picture, video, yt-image, yt-img-shadow, .yt-core-image, .ytCoreImageHost) {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+html.simple-youtube-enabled.simple-youtube-channel-tab-releases ytd-rich-grid-renderer,
+html.simple-youtube-enabled.simple-youtube-channel-tab-releases ytd-rich-grid-row {
+  --ytd-rich-grid-items-per-row: 4 !important;
+}
+
+html.simple-youtube-enabled.simple-youtube-channel-tab-releases :is(
+  ytd-rich-item-renderer,
+  yt-lockup-view-model
+) {
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: initial !important;
+  border-bottom: 0 !important;
+}
+
+html.simple-youtube-enabled.simple-youtube-channel-tab-releases :is(
+  ytd-rich-item-renderer,
+  yt-lockup-view-model
+) :is(
+  ytd-thumbnail,
+  yt-thumbnail-view-model,
+  yt-collection-thumbnail-view-model,
+  yt-collections-stack,
+  a#thumbnail,
+  .ytLockupViewModelContentImage
+) {
+  display: initial !important;
+  background: initial !important;
+}
+
+html.simple-youtube-enabled.simple-youtube-channel-tab-releases :is(
+  ytd-rich-item-renderer,
+  yt-lockup-view-model
+) :is(
+  ytd-thumbnail,
+  yt-thumbnail-view-model,
+  yt-collection-thumbnail-view-model,
+  yt-collections-stack,
+  a#thumbnail,
+  .ytLockupViewModelContentImage
+) :is(img, picture, video, yt-image, yt-img-shadow, .yt-core-image, .ytCoreImageHost) {
   opacity: 1 !important;
   visibility: visible !important;
 }

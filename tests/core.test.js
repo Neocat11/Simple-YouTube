@@ -41,6 +41,14 @@ describe("SimpleYouTubeCore", () => {
     expect(core.getPageType(new URL("https://www.youtube.com/playlist?list=abc123"))).toBe("playlist");
   });
 
+  test("classifies channel tab types independently from page type", () => {
+    expect(core.getChannelTabType(new URL("https://www.youtube.com/@example"))).toBe("home");
+    expect(core.getChannelTabType(new URL("https://www.youtube.com/@example/videos"))).toBe("videos");
+    expect(core.getChannelTabType(new URL("https://www.youtube.com/@example/streams"))).toBe("streams");
+    expect(core.getChannelTabType(new URL("https://www.youtube.com/@example/releases"))).toBe("releases");
+    expect(core.getChannelTabType(new URL("https://www.youtube.com/results?search_query=lofi"))).toBe("");
+  });
+
   test("sets a single page type class", () => {
     const dom = new JSDOM("<!doctype html><html><body></body></html>");
 

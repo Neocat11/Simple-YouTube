@@ -24,12 +24,14 @@ test("search video rows keep a readable stacked metadata layout", async () => {
         rowWidth: rect.width,
         titleVisible: Boolean(titleRect && titleRect.width > 0 && titleRect.height > 0),
         metadataBelowTitle: Boolean(titleRect && metaRect && metaRect.top >= titleRect.bottom - 1),
+        titleStartsAfterAvatar: Boolean(titleRect && titleRect.left > rect.left + 40),
         thumbnailSpaceVisible: Boolean(thumbnailRect && thumbnailStyle && thumbnailStyle.display !== "none" && thumbnailRect.width > 30 && thumbnailRect.height > 30)
       };
     });
 
     expect(result.titleVisible).toBe(true);
     expect(result.metadataBelowTitle).toBe(true);
+    expect(result.titleStartsAfterAvatar).toBe(true);
     expect(result.thumbnailSpaceVisible).toBe(false);
     expect(result.rowHeight).toBeGreaterThan(50);
     expect(result.rowHeight).toBeLessThan(170);
@@ -39,11 +41,78 @@ test("search video rows keep a readable stacked metadata layout", async () => {
   }
 });
 
+test("home rich shelf show more preserves collapsed hidden items and expands on click", async () => {
+  test.skip(!hasAuthProfile(), "Requires .playwright-user-profile with a logged-in YouTube session.");
+
+  const context = await launchWithExtension({
+    channel: "chrome",
+    userDataDir: authProfilePath
+  });
+
+  try {
+    const page = context.pages()[0] || await context.newPage();
+    await page.goto("https://www.youtube.com/", { waitUntil: "domcontentloaded" });
+    await page.addStyleTag({ path: path.resolve(__dirname, "..", "src", "content.css") });
+    await page.evaluate(() => document.documentElement.classList.add("simple-youtube-enabled", "simple-youtube-page-home"));
+
+    const shelf = page.locator("ytd-rich-shelf-renderer").first();
+    await expect(shelf).toBeVisible({ timeout: 45_000 });
+    await shelf.scrollIntoViewIfNeeded();
+
+    const before = await shelf.evaluate((element) => {
+      const items = Array.from(element.querySelectorAll("ytd-rich-item-renderer"));
+      const visible = items.filter((item) => {
+        const rect = item.getBoundingClientRect();
+        return getComputedStyle(item).display !== "none" && rect.width > 0 && rect.height > 0;
+      });
+      const hidden = items.filter((item) => item.hasAttribute("hidden"));
+      const button = element.querySelector(".expand-collapse-button button");
+      const buttonRect = button?.getBoundingClientRect();
+      return {
+        total: items.length,
+        visible: visible.length,
+        hidden: hidden.length,
+        buttonVisible: Boolean(buttonRect && buttonRect.width > 0 && buttonRect.height > 0)
+      };
+    });
+
+    expect(before.total).toBeGreaterThan(before.visible);
+    expect(before.hidden).toBeGreaterThan(0);
+    expect(before.buttonVisible).toBe(true);
+
+    const clicked = await shelf.evaluate((element) => {
+      const moreLabel = "\u3082\u3063\u3068\u898b\u308b";
+      const buttons = Array.from(element.querySelectorAll(".expand-collapse-button button"));
+      const button = buttons.find((candidate) => {
+        const rect = candidate.getBoundingClientRect();
+        return candidate.getAttribute("aria-label")?.includes(moreLabel) && rect.width > 0 && rect.height > 0;
+      });
+      button?.click();
+      return Boolean(button);
+    });
+
+    expect(clicked).toBe(true);
+    await page.waitForTimeout(500);
+
+    const after = await shelf.evaluate((element) => {
+      const items = Array.from(element.querySelectorAll("ytd-rich-item-renderer"));
+      return items.filter((item) => {
+        const rect = item.getBoundingClientRect();
+        return getComputedStyle(item).display !== "none" && rect.width > 0 && rect.height > 0;
+      }).length;
+    });
+
+    expect(after).toBeGreaterThan(before.visible);
+  } finally {
+    await context.close();
+  }
+});
+
 test("search playlist cards hide collection thumbnail stacks", async () => {
   const context = await launchWithExtension();
   try {
     const page = await context.newPage();
-    await page.goto("https://www.youtube.com/results?search_query=playlist", { waitUntil: "domcontentloaded" });
+    await page.goto("https://www.youtube.com/results?search_query=playlist&sp=EgIQAw%253D%253D", { waitUntil: "domcontentloaded" });
     const playlist = page.locator('yt-lockup-view-model:has(a[href*="list="])').first();
     await expect(playlist).toBeVisible({ timeout: 45_000 });
 
@@ -96,8 +165,9 @@ test("home non-video game or ad cards keep bounded artwork", async () => {
     await page.addStyleTag({ path: path.resolve(__dirname, "..", "src", "content.css") });
     await page.evaluate(() => document.documentElement.classList.add("simple-youtube-enabled", "simple-youtube-page-home"));
     await page.evaluate(() => {
+      const gameLabel = "\u30b2\u30fc\u30e0";
       Array.from(document.querySelectorAll("yt-chip-cloud-chip-renderer, button"))
-        .find((element) => (element.innerText || "").includes("ゲーム"))
+        .find((element) => (element.innerText || "").includes(gameLabel))
         ?.click();
     });
     await page.waitForTimeout(3_000);
@@ -135,6 +205,32 @@ test("home non-video game or ad cards keep bounded artwork", async () => {
         expect(image.width).toBeLessThan(760);
       }
     }
+  } finally {
+    await context.close();
+  }
+});
+
+test("channel releases tab is left outside Simple-YouTube video compaction", async () => {
+  const context = await launchWithExtension();
+  try {
+    const page = await context.newPage();
+    await page.goto("https://www.youtube.com/@LofiGirl/releases", { waitUntil: "domcontentloaded" });
+    const release = page.locator("ytd-rich-item-renderer").first();
+    await expect(release).toBeVisible({ timeout: 45_000 });
+
+    const result = await release.evaluate((item) => {
+      const image = item.querySelector("img");
+      const imageRect = image?.getBoundingClientRect();
+      const imageStyle = image ? getComputedStyle(image) : null;
+      const rect = item.getBoundingClientRect();
+      return {
+        rowWidth: rect.width,
+        imageVisible: Boolean(imageRect && imageStyle && imageStyle.visibility !== "hidden" && imageStyle.opacity !== "0" && imageRect.width > 30 && imageRect.height > 30)
+      };
+    });
+
+    expect(result.imageVisible).toBe(true);
+    expect(result.rowWidth).toBeLessThan(500);
   } finally {
     await context.close();
   }

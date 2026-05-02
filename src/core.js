@@ -10,6 +10,7 @@
 })(typeof globalThis !== "undefined" ? globalThis : this, function () {
   const ENABLED_CLASS = "simple-youtube-enabled";
   const PAGE_CLASS_PREFIX = "simple-youtube-page-";
+  const CHANNEL_TAB_CLASS_PREFIX = "simple-youtube-channel-tab-";
   const PROCESSED_ATTR = "data-simple-youtube-processed";
   const RENDERER_SELECTOR = [
     "ytd-video-renderer",
@@ -124,6 +125,35 @@
     classList.add(`${PAGE_CLASS_PREFIX}${pageType}`);
   }
 
+  function getChannelTabType(locationLike) {
+    const pathname = locationLike?.pathname || "/";
+
+    if (!pathname.startsWith("/@") && !pathname.startsWith("/channel/") && !pathname.startsWith("/c/")) {
+      return "";
+    }
+
+    const lastSegment = pathname.split("/").filter(Boolean).at(-1) || "";
+    const tabTypes = new Set(["videos", "shorts", "streams", "releases", "podcasts", "playlists", "community", "store"]);
+    return tabTypes.has(lastSegment) ? lastSegment : "home";
+  }
+
+  function setChannelTabClass(documentRef, locationLike) {
+    if (!documentRef || !documentRef.documentElement) {
+      return;
+    }
+
+    const channelTabType = getChannelTabType(locationLike);
+    const classList = documentRef.documentElement.classList;
+
+    Array.from(classList)
+      .filter((className) => className.startsWith(CHANNEL_TAB_CLASS_PREFIX))
+      .forEach((className) => classList.remove(className));
+
+    if (channelTabType) {
+      classList.add(`${CHANNEL_TAB_CLASS_PREFIX}${channelTabType}`);
+    }
+  }
+
   function markProcessed(rootNode) {
     if (!rootNode || rootNode.nodeType !== 1) {
       return 0;
@@ -179,6 +209,7 @@
 
   return {
     ENABLED_CLASS,
+    CHANNEL_TAB_CLASS_PREFIX,
     PAGE_CLASS_PREFIX,
     PROCESSED_ATTR,
     RENDERER_SELECTOR,
@@ -187,10 +218,12 @@
     getThumbnailContainers,
     getThumbnailMedia,
     getStoredEnabled,
+    getChannelTabType,
     getPageType,
     isShortsUrl,
     markProcessed,
     setPageTypeClass,
+    setChannelTabClass,
     setEnabledClass
   };
 });
