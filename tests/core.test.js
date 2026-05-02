@@ -35,6 +35,8 @@ describe("SimpleYouTubeCore", () => {
     expect(core.getPageType(new URL("https://www.youtube.com/watch?v=abc123"))).toBe("watch");
     expect(core.getPageType(new URL("https://www.youtube.com/shorts/abc123"))).toBe("shorts");
     expect(core.getPageType(new URL("https://www.youtube.com/feed/subscriptions"))).toBe("subscriptions");
+    expect(core.getPageType(new URL("https://www.youtube.com/feed/you"))).toBe("you");
+    expect(core.getPageType(new URL("https://www.youtube.com/feed/history"))).toBe("history");
     expect(core.getPageType(new URL("https://www.youtube.com/@example/videos"))).toBe("channel");
     expect(core.getPageType(new URL("https://www.youtube.com/playlist?list=abc123"))).toBe("playlist");
   });

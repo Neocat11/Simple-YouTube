@@ -90,6 +90,14 @@
       return "subscriptions";
     }
 
+    if (pathname.startsWith("/feed/you")) {
+      return "you";
+    }
+
+    if (pathname.startsWith("/feed/history")) {
+      return "history";
+    }
+
     if (pathname.startsWith("/@") || pathname.startsWith("/channel/") || pathname.startsWith("/c/")) {
       return "channel";
     }
