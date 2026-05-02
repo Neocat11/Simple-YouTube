@@ -9,7 +9,8 @@ const surfaces = [
     pageClass: "simple-youtube-page-search",
     itemSelector: 'ytd-video-renderer:has(a[href^="/watch"])',
     titleSelector: "a#video-title, a.ytLockupMetadataViewModelTitle",
-    compactList: true
+    compactList: true,
+    maxRowHeight: 170
   },
   {
     name: "search shorts",
@@ -110,7 +111,7 @@ test.describe("layout health", () => {
           expect(rect.titleVisible).toBe(true);
           expect(rect.thumbnailVisible).toBe(false);
           if (surface.compactList) {
-            expect(rect.height).toBeLessThan(120);
+            expect(rect.height).toBeLessThan(surface.maxRowHeight || 120);
             expect(rect.thumbnailSpaceVisible).toBe(false);
           }
         }

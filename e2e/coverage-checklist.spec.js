@@ -12,7 +12,8 @@ const publicCases = [
     pageClass: "simple-youtube-page-search",
     selector: 'ytd-video-renderer:has(a[href^="/watch"])',
     titleSelector: "a#video-title, h3 a",
-    compact: true
+    compact: true,
+    maxRowHeight: 170
   },
   {
     id: "search.shorts-shelf",
@@ -20,7 +21,8 @@ const publicCases = [
     pageClass: "simple-youtube-page-search",
     selector: 'ytm-shorts-lockup-view-model:has(a[href^="/shorts/"])',
     titleSelector: ".shortsLockupViewModelHostOutsideMetadataEndpoint",
-    compact: true
+    compact: true,
+    maxRowHeight: 170
   },
   {
     id: "search.live-results",
@@ -28,7 +30,8 @@ const publicCases = [
     pageClass: "simple-youtube-page-search",
     selector: 'ytd-video-renderer:has(a[href^="/watch"])',
     titleSelector: "a#video-title, h3 a",
-    compact: true
+    compact: true,
+    maxRowHeight: 170
   },
   {
     id: "search.playlist-results",
@@ -416,7 +419,7 @@ async function assertCoverageCase(page, coverageCase, options = {}) {
     expect(rect.thumbnailVisible).toBe(false);
     expect(rect.badgesHidden).toBe(true);
     if (coverageCase.compact) {
-      expect(rect.height).toBeLessThan(140);
+      expect(rect.height).toBeLessThan(coverageCase.maxRowHeight || 140);
       expect(rect.thumbnailSpaceVisible).toBe(false);
     }
   }
