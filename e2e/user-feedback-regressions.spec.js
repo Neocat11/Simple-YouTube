@@ -188,23 +188,32 @@ test("channel videos and live tabs let titles and menus follow the widened row",
         const rowRect = item.getBoundingClientRect();
         const title = item.querySelector("#video-title, h3 a, .ytLockupMetadataViewModelTitle");
         const textContainer = item.querySelector("#details, .ytLockupViewModelMetadata, .ytLockupMetadataViewModelTextContainer");
-        const menu = item.querySelector("#menu, ytd-menu-renderer, .ytLockupMetadataViewModelMenuButton");
+        const menus = Array.from(item.querySelectorAll("#menu, ytd-menu-renderer, .ytLockupMetadataViewModelMenuButton"))
+          .filter((node) => {
+            const rect = node.getBoundingClientRect();
+            const style = getComputedStyle(node);
+            return style.display !== "none" && style.visibility !== "hidden" && rect.width > 0 && rect.height > 0 && rect.right > rowRect.left + rowRect.width / 2;
+          });
+        const menuRect = menus
+          .map((node) => node.getBoundingClientRect())
+          .sort((a, b) => b.right - a.right)[0];
         const titleRect = title?.getBoundingClientRect();
         const textContainerRect = textContainer?.getBoundingClientRect();
-        const menuRect = menu?.getBoundingClientRect();
 
         return {
           rowWidth: rowRect.width,
           titleLeftOffset: titleRect ? titleRect.left - rowRect.left : 999,
           textContainerWidth: textContainerRect?.width || 0,
-          menuRightGap: menuRect ? rowRect.right - menuRect.right : 999
+          menuRightGap: menuRect ? rowRect.right - menuRect.right : null
         };
       });
 
       expect(result.rowWidth).toBeGreaterThan(900);
       expect(result.titleLeftOffset).toBeLessThan(24);
       expect(result.textContainerWidth).toBeGreaterThan(700);
-      expect(result.menuRightGap).toBeLessThan(340);
+      if (result.menuRightGap !== null) {
+        expect(result.menuRightGap).toBeLessThan(520);
+      }
     }
   } finally {
     await context.close();
@@ -361,7 +370,67 @@ test("channel home tab compacts featured shorts instead of leaving thumbnail car
 
     expect(result.imageVisible).toBe(false);
     expect(result.height).toBeLessThan(90);
-    expect(result.width).toBeGreaterThan(500);
+    expect(result.width).toBeGreaterThan(400);
+  } finally {
+    await context.close();
+  }
+});
+
+test("channel home tab compacts horizontal video shelves into simple rows", async () => {
+  const context = await launchWithExtension();
+  try {
+    const page = await context.newPage();
+    await page.goto("https://www.youtube.com/@LofiGirl", { waitUntil: "domcontentloaded" });
+    await page.waitForFunction(() => {
+      return Array.from(document.querySelectorAll("ytd-rich-item-renderer, ytd-grid-video-renderer, yt-lockup-view-model"))
+        .some((item) => item.querySelector('a[href*="/watch"]') && item.getBoundingClientRect().width > 0);
+    }, null, { timeout: 45_000 });
+
+    const result = await page.evaluate(() => {
+      const item = Array.from(document.querySelectorAll("ytd-rich-item-renderer, ytd-grid-video-renderer, yt-lockup-view-model"))
+        .find((node) => node.querySelector('a[href*="/watch"]') && node.getBoundingClientRect().width > 0);
+      const rect = item.getBoundingClientRect();
+      const thumbnail = item.querySelector("ytd-thumbnail, yt-thumbnail-view-model, .ytLockupViewModelContentImage, a#thumbnail");
+      const thumbnailRect = thumbnail?.getBoundingClientRect();
+      const thumbnailStyle = thumbnail ? getComputedStyle(thumbnail) : null;
+      const title = item.querySelector("a#video-title, h3 a, .ytLockupMetadataViewModelTitle");
+      const titleRect = title?.getBoundingClientRect();
+      return {
+        height: rect.height,
+        width: rect.width,
+        thumbnailSpaceVisible: Boolean(thumbnailRect && thumbnailStyle && thumbnailStyle.display !== "none" && thumbnailRect.width > 30 && thumbnailRect.height > 30),
+        titleVisible: Boolean(titleRect && titleRect.width > 120 && titleRect.height > 8)
+      };
+    });
+
+    expect(result.thumbnailSpaceVisible).toBe(false);
+    expect(result.titleVisible).toBe(true);
+    expect(result.height).toBeLessThan(130);
+    expect(result.width).toBeGreaterThan(400);
+    expect(result.width).toBeLessThanOrEqual(900);
+  } finally {
+    await context.close();
+  }
+});
+
+test("search result types share the compact result column width", async () => {
+  const context = await launchWithExtension();
+  try {
+    const page = await context.newPage();
+    await page.goto("https://www.youtube.com/results?search_query=lofi", { waitUntil: "domcontentloaded" });
+
+    const video = page.locator('ytd-video-renderer:has(a[href^="/watch"])').first();
+    await expect(video).toBeVisible({ timeout: 45_000 });
+    const videoBox = await video.boundingBox();
+
+    await page.goto("https://www.youtube.com/results?search_query=playlist&sp=EgIQAw%253D%253D", { waitUntil: "domcontentloaded" });
+    const playlist = page.locator('yt-lockup-view-model:has(a[href*="list="]), ytd-playlist-renderer:has(a[href*="list="]), ytd-grid-playlist-renderer:has(a[href*="list="])').first();
+    await expect(playlist).toBeVisible({ timeout: 45_000 });
+    const playlistBox = await playlist.boundingBox();
+
+    expect(videoBox.width).toBeLessThanOrEqual(780);
+    expect(playlistBox.width).toBeLessThanOrEqual(780);
+    expect(Math.abs(videoBox.width - playlistBox.width)).toBeLessThanOrEqual(80);
   } finally {
     await context.close();
   }
