@@ -8,6 +8,26 @@ html.simple-youtube-enabled {
   --simple-youtube-preview-radius: 6px;
 }
 
+html.simple-youtube-enabled :is(
+  .ytContentMetadataViewModelMetadataRow,
+  #metadata-line,
+  #byline-container
+) {
+  column-gap: 7px !important;
+}
+
+html.simple-youtube-enabled .ytContentMetadataViewModelMetadataRow + .ytContentMetadataViewModelMetadataRow {
+  margin-inline-start: 8px !important;
+}
+
+html.simple-youtube-enabled :is(
+  .ytContentMetadataViewModelDelimiter,
+  #metadata-line > span:not(:first-child),
+  #byline-container > *:not(:first-child)
+) {
+  margin-inline-start: 5px !important;
+}
+
 html.simple-youtube-enabled.simple-youtube-page-search ytd-video-renderer {
   display: block !important;
   width: 100% !important;
