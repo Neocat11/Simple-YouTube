@@ -5,6 +5,11 @@ html.simple-youtube-enabled {
   --simple-youtube-hover: color-mix(in srgb, CanvasText 7%, Canvas);
   --simple-youtube-row-max-width: 860px;
   --simple-youtube-search-row-max-width: 760px;
+  --simple-youtube-channel-row-width: 920px;
+  --simple-youtube-channel-title-font-size: 14px;
+  --simple-youtube-channel-meta-font-size: 12px;
+  --simple-youtube-channel-row-height: 46px;
+  --simple-youtube-channel-menu-column-width: 40px;
   --simple-youtube-preview-radius: 6px;
 }
 
@@ -1434,6 +1439,121 @@ html.simple-youtube-enabled.simple-youtube-page-search :is(
   overflow: hidden !important;
   text-overflow: ellipsis !important;
   white-space: nowrap !important;
+}
+
+/* Channel tabs: normalize Simple-YouTube rows across tab switches. */
+html.simple-youtube-enabled:is(
+  .simple-youtube-channel-tab-home,
+  .simple-youtube-channel-tab-videos,
+  .simple-youtube-channel-tab-shorts,
+  .simple-youtube-channel-tab-streams,
+  .simple-youtube-channel-tab-playlists
+) :is(
+  ytd-rich-item-renderer:has(a[href*="/watch"]),
+  ytd-rich-item-renderer:has(a[href*="/shorts/"]),
+  ytd-grid-video-renderer:has(a[href*="/watch"]),
+  yt-lockup-view-model:has(a[href*="/watch"]),
+  yt-lockup-view-model:has(a[href*="/shorts/"]),
+  yt-lockup-view-model:has(a[href*="list="]),
+  ytm-shorts-lockup-view-model,
+  ytd-grid-playlist-renderer,
+  ytd-playlist-renderer
+) {
+  width: min(100%, var(--simple-youtube-channel-row-width)) !important;
+  min-width: 0 !important;
+  max-width: var(--simple-youtube-channel-row-width) !important;
+}
+
+html.simple-youtube-enabled:is(
+  .simple-youtube-channel-tab-home,
+  .simple-youtube-channel-tab-videos,
+  .simple-youtube-channel-tab-shorts,
+  .simple-youtube-channel-tab-streams,
+  .simple-youtube-channel-tab-playlists
+) :is(
+  ytd-rich-item-renderer:has(a[href*="/watch"]) #content,
+  ytd-rich-item-renderer:has(a[href*="/watch"]) ytd-rich-grid-media,
+  ytd-rich-item-renderer:has(a[href*="/shorts/"]) #content,
+  ytd-grid-video-renderer:has(a[href*="/watch"]) #dismissible,
+  yt-lockup-view-model:has(a[href*="/watch"]) .ytLockupViewModelHost,
+  yt-lockup-view-model:has(a[href*="/shorts/"]) .ytLockupViewModelHost,
+  yt-lockup-view-model:has(a[href*="list="]) .ytLockupViewModelHost,
+  ytm-shorts-lockup-view-model .shortsLockupViewModelHostOutsideMetadata
+) {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) var(--simple-youtube-channel-menu-column-width) !important;
+  align-items: center !important;
+  gap: 10px !important;
+  width: 100% !important;
+  max-width: var(--simple-youtube-channel-row-width) !important;
+  min-height: var(--simple-youtube-channel-row-height) !important;
+  padding: 7px 10px !important;
+  box-sizing: border-box !important;
+}
+
+html.simple-youtube-enabled:is(
+  .simple-youtube-channel-tab-home,
+  .simple-youtube-channel-tab-videos,
+  .simple-youtube-channel-tab-shorts,
+  .simple-youtube-channel-tab-streams,
+  .simple-youtube-channel-tab-playlists
+) :is(
+  #video-title,
+  h3,
+  h3 a,
+  .ytLockupMetadataViewModelTitle,
+  .shortsLockupViewModelHostMetadataTitle,
+  .shortsLockupViewModelHostOutsideMetadataEndpoint,
+  #playlist-title,
+  a[href*="list="]
+) {
+  font-size: var(--simple-youtube-channel-title-font-size) !important;
+  line-height: 1.35 !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+html.simple-youtube-enabled:is(
+  .simple-youtube-channel-tab-home,
+  .simple-youtube-channel-tab-videos,
+  .simple-youtube-channel-tab-shorts,
+  .simple-youtube-channel-tab-streams,
+  .simple-youtube-channel-tab-playlists
+) :is(
+  #meta,
+  #metadata,
+  ytd-video-meta-block,
+  .ytLockupMetadataViewModelMetadata,
+  yt-content-metadata-view-model,
+  .ytContentMetadataViewModelMetadataRow,
+  .shortsLockupViewModelHostOutsideMetadataSubhead
+) {
+  font-size: var(--simple-youtube-channel-meta-font-size) !important;
+  line-height: 1.35 !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+html.simple-youtube-enabled:is(
+  .simple-youtube-channel-tab-home,
+  .simple-youtube-channel-tab-videos,
+  .simple-youtube-channel-tab-shorts,
+  .simple-youtube-channel-tab-streams,
+  .simple-youtube-channel-tab-playlists
+) :is(
+  #menu,
+  ytd-menu-renderer,
+  .ytLockupMetadataViewModelMenuButton
+) {
+  grid-column: 2 !important;
+  justify-self: end !important;
+  width: var(--simple-youtube-channel-menu-column-width) !important;
+  min-width: var(--simple-youtube-channel-menu-column-width) !important;
 }
 
 /* Releases are music discography cards, not video thumbnails. Preserve album art. */
