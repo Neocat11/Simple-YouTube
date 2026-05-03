@@ -77,6 +77,7 @@ test.describe("layout health", () => {
               width: rect.width,
               top: rect.top,
               bottom: rect.bottom,
+              titleFontSize: title ? Number.parseFloat(getComputedStyle(title).fontSize) : 0,
               titleVisible: Boolean(titleRect && titleRect.width > 0 && titleRect.height > 0),
               thumbnailSpaceVisible: Array.from(item.querySelectorAll("ytd-thumbnail, yt-thumbnail-view-model, a#thumbnail, .ytLockupViewModelContentImage")).some((thumbnail) => {
                 const style = getComputedStyle(thumbnail);
@@ -109,6 +110,8 @@ test.describe("layout health", () => {
           expect(rect.height).toBeGreaterThan(20);
           expect(rect.height).toBeLessThan(420);
           expect(rect.titleVisible).toBe(true);
+          expect(rect.titleFontSize).toBeGreaterThanOrEqual(12);
+          expect(rect.titleFontSize).toBeLessThanOrEqual(15);
           expect(rect.thumbnailVisible).toBe(false);
           if (surface.compactList) {
             expect(rect.height).toBeLessThan(surface.maxRowHeight || 120);

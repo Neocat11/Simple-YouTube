@@ -135,8 +135,8 @@ const publicCases = [
     id: "playlist.detail-videos",
     url: "https://www.youtube.com/playlist?list=PLFgquLnL59alCl_2TQvOiD5Vgm1hCaGSI",
     pageClass: "simple-youtube-page-playlist",
-    selector: "ytd-playlist-video-renderer",
-    titleSelector: "a#video-title, h3 a",
+    selector: 'ytd-playlist-video-renderer, yt-lockup-view-model:has(a[href^="/watch"]), yt-lockup-view-model:has(a[href*="/watch"])',
+    titleSelector: "a#video-title, h3 a, a.ytLockupMetadataViewModelTitle",
     compact: true
   }
 ];

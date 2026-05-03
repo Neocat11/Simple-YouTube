@@ -6,6 +6,9 @@ html.simple-youtube-enabled {
   --simple-youtube-row-max-width: 860px;
   --simple-youtube-search-row-max-width: 760px;
   --simple-youtube-channel-row-width: 920px;
+  --simple-youtube-title-font-size: 14px;
+  --simple-youtube-meta-font-size: 12px;
+  --simple-youtube-row-line-height: 1.35;
   --simple-youtube-channel-title-font-size: 14px;
   --simple-youtube-channel-meta-font-size: 12px;
   --simple-youtube-channel-row-height: 46px;
@@ -1091,6 +1094,169 @@ html.simple-youtube-enabled.simple-youtube-channel-tab-releases :is(
 ) :is(img, picture, video, yt-image, yt-img-shadow, .yt-core-image, .ytCoreImageHost) {
   opacity: 1 !important;
   visibility: visible !important;
+}
+
+/* Final visual pass: make Simple-YouTube rows feel like one system. */
+html.simple-youtube-enabled :is(
+  ytd-video-renderer,
+  ytd-rich-item-renderer,
+  ytd-compact-video-renderer,
+  ytd-grid-video-renderer,
+  ytd-playlist-video-renderer,
+  yt-lockup-view-model,
+  ytm-shorts-lockup-view-model
+) :is(
+  a#video-title,
+  #video-title,
+  #playlist-title,
+  h3,
+  h3 a,
+  .ytLockupMetadataViewModelTitle,
+  .shortsLockupViewModelHostMetadataTitle,
+  .shortsLockupViewModelHostOutsideMetadataEndpoint
+) {
+  font-size: var(--simple-youtube-title-font-size) !important;
+  line-height: var(--simple-youtube-row-line-height) !important;
+  font-weight: 600 !important;
+  letter-spacing: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+html.simple-youtube-enabled :is(
+  ytd-video-renderer,
+  ytd-rich-item-renderer,
+  ytd-compact-video-renderer,
+  ytd-grid-video-renderer,
+  ytd-playlist-video-renderer,
+  yt-lockup-view-model,
+  ytm-shorts-lockup-view-model
+) :is(
+  #meta,
+  #metadata,
+  #metadata-line,
+  #byline-container,
+  ytd-video-meta-block,
+  .ytLockupMetadataViewModelMetadata,
+  yt-content-metadata-view-model,
+  .ytContentMetadataViewModelMetadataRow,
+  .shortsLockupViewModelHostOutsideMetadataSubhead
+) {
+  font-size: var(--simple-youtube-meta-font-size) !important;
+  line-height: var(--simple-youtube-row-line-height) !important;
+  color: var(--simple-youtube-muted) !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+html.simple-youtube-enabled.simple-youtube-page-search ytd-video-renderer {
+  max-width: var(--simple-youtube-search-row-max-width) !important;
+  margin-block-end: 4px !important;
+}
+
+html.simple-youtube-enabled.simple-youtube-page-search ytd-video-renderer #dismissible {
+  min-height: 52px !important;
+  padding-block: 7px !important;
+}
+
+html.simple-youtube-enabled.simple-youtube-page-search ytd-video-renderer #channel-info {
+  height: 18px !important;
+  margin-top: 1px !important;
+}
+
+html.simple-youtube-enabled.simple-youtube-page-search ytd-video-renderer ytd-video-meta-block {
+  margin-top: 2px !important;
+}
+
+html.simple-youtube-enabled.simple-youtube-page-search ytd-video-renderer :is(
+  #channel-info,
+  #metadata-snippet-container,
+  #description-text,
+  ytd-expandable-metadata-renderer,
+  ytd-button-renderer,
+  expandable-metadata
+) {
+  max-height: 20px !important;
+}
+
+html.simple-youtube-enabled.simple-youtube-page-search ytd-video-renderer :is(
+  #description-text,
+  #metadata-snippet-container,
+  ytd-expandable-metadata-renderer,
+  expandable-metadata
+) {
+  display: none !important;
+}
+
+html.simple-youtube-enabled.simple-youtube-page-search ytm-shorts-lockup-view-model .shortsLockupViewModelHostOutsideMetadata,
+html.simple-youtube-enabled.simple-youtube-page-search yt-lockup-view-model:has(a[href*="list="]) .ytLockupViewModelHost {
+  min-height: 46px !important;
+  padding-block: 7px !important;
+}
+
+html.simple-youtube-enabled:is(
+  .simple-youtube-page-home,
+  .simple-youtube-page-subscriptions,
+  .simple-youtube-page-you,
+  .simple-youtube-page-history
+) :is(
+  ytd-rich-item-renderer:has(a[href*="/watch"]),
+  ytd-rich-item-renderer:has(a[href*="/shorts/"]),
+  yt-lockup-view-model:has(a[href*="/watch"]),
+  yt-lockup-view-model:has(a[href*="/shorts/"]),
+  yt-lockup-view-model:has(a[href*="list="]),
+  ytm-shorts-lockup-view-model
+) {
+  width: min(100%, var(--simple-youtube-row-max-width)) !important;
+  max-width: var(--simple-youtube-row-max-width) !important;
+}
+
+html.simple-youtube-enabled:is(
+  .simple-youtube-page-home,
+  .simple-youtube-page-subscriptions,
+  .simple-youtube-page-you,
+  .simple-youtube-page-history
+) :is(
+  ytd-rich-item-renderer:has(a[href*="/watch"]) #content,
+  ytd-rich-item-renderer:has(a[href*="/watch"]) ytd-rich-grid-media,
+  yt-lockup-view-model:has(a[href*="/watch"]) .ytLockupViewModelHost,
+  yt-lockup-view-model:has(a[href*="/shorts/"]) .ytLockupViewModelHost,
+  yt-lockup-view-model:has(a[href*="list="]) .ytLockupViewModelHost,
+  ytm-shorts-lockup-view-model .shortsLockupViewModelHostOutsideMetadata
+) {
+  grid-template-columns: minmax(0, 1fr) 40px !important;
+  gap: 10px !important;
+  min-height: 46px !important;
+  padding: 7px 10px !important;
+}
+
+html.simple-youtube-enabled.simple-youtube-page-watch yt-lockup-view-model .ytLockupViewModelHost {
+  grid-template-columns: minmax(0, 1fr) 32px !important;
+  gap: 8px !important;
+  min-height: 54px !important;
+  padding: 7px 8px !important;
+}
+
+html.simple-youtube-enabled.simple-youtube-page-playlist ytd-playlist-video-renderer {
+  max-width: 920px !important;
+  min-height: 48px !important;
+}
+
+html.simple-youtube-enabled.simple-youtube-page-playlist ytd-playlist-video-renderer :is(
+  #thumbnail-container,
+  ytd-thumbnail,
+  a#thumbnail,
+  yt-thumbnail-view-model,
+  .ytLockupViewModelContentImage
+) {
+  display: none !important;
+  width: 0 !important;
+  min-width: 0 !important;
+  max-width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 /* Channel Home shelves often use absolute watch URLs, so match contains as well. */
