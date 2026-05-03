@@ -593,6 +593,89 @@ html.simple-youtube-enabled:is(
   margin-inline-start: 10px !important;
 }
 
+html.simple-youtube-enabled:is(
+  .simple-youtube-channel-tab-videos,
+  .simple-youtube-channel-tab-streams,
+  .simple-youtube-channel-tab-podcasts
+) ytd-rich-item-renderer:has(#details) #content {
+  display: grid !important;
+  grid-template-columns: minmax(220px, 1fr) 32px !important;
+  align-items: center !important;
+  gap: 10px !important;
+  min-height: 44px !important;
+  padding: 7px 10px !important;
+  box-sizing: border-box !important;
+}
+
+html.simple-youtube-enabled:is(
+  .simple-youtube-channel-tab-videos,
+  .simple-youtube-channel-tab-streams,
+  .simple-youtube-channel-tab-podcasts
+) ytd-rich-item-renderer:has(#details) :is(
+  ytd-thumbnail,
+  a#thumbnail,
+  yt-thumbnail-view-model,
+  .ytLockupViewModelContentImage
+) {
+  display: none !important;
+  width: 0 !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+}
+
+html.simple-youtube-enabled:is(
+  .simple-youtube-channel-tab-videos,
+  .simple-youtube-channel-tab-streams,
+  .simple-youtube-channel-tab-podcasts
+) ytd-rich-item-renderer:has(#details) :is(
+  #details,
+  #meta,
+  #metadata,
+  ytd-video-meta-block,
+  h3
+) {
+  min-width: 0 !important;
+  width: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+html.simple-youtube-enabled:is(
+  .simple-youtube-channel-tab-videos,
+  .simple-youtube-channel-tab-streams,
+  .simple-youtube-channel-tab-podcasts
+) ytd-rich-item-renderer:has(#details) #details {
+  grid-column: 1 !important;
+}
+
+html.simple-youtube-enabled:is(
+  .simple-youtube-channel-tab-videos,
+  .simple-youtube-channel-tab-streams,
+  .simple-youtube-channel-tab-podcasts
+) ytd-rich-item-renderer:has(#details) :is(
+  #menu,
+  ytd-menu-renderer
+) {
+  grid-column: 2 !important;
+  justify-self: end !important;
+}
+
+html.simple-youtube-enabled:is(
+  .simple-youtube-channel-tab-videos,
+  .simple-youtube-channel-tab-streams,
+  .simple-youtube-channel-tab-podcasts
+) ytd-rich-item-renderer:has(#details) :is(
+  #video-title,
+  h3 a
+) {
+  display: block !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  line-height: 1.35 !important;
+}
+
 html.simple-youtube-enabled.simple-youtube-page-channel ytm-shorts-lockup-view-model {
   display: block !important;
   width: min(100%, var(--simple-youtube-row-max-width)) !important;

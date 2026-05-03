@@ -205,6 +205,49 @@ test("channel videos and live tabs align with shorts tab row geometry", async ()
   }
 });
 
+test("legacy channel video rows remove the hidden thumbnail column", async ({ page }) => {
+  await page.setContent(`
+    <!doctype html>
+    <html class="simple-youtube-enabled simple-youtube-page-channel simple-youtube-channel-tab-videos">
+      <head></head>
+      <body>
+        <ytd-rich-grid-renderer>
+          <div id="contents">
+            <ytd-rich-item-renderer style="display:block;width:860px;">
+              <div id="content">
+                <a id="thumbnail" href="/watch?v=abc" style="display:block;width:260px;height:146px;"></a>
+                <div id="details" style="margin-left:260px;">
+                  <h3><a id="video-title" href="/watch?v=abc">LoL - sample channel upload title that should start at the row edge</a></h3>
+                  <ytd-video-meta-block>
+                    <div id="metadata-line">2.3万回視聴 ・ 1日前</div>
+                  </ytd-video-meta-block>
+                </div>
+                <ytd-menu-renderer id="menu">⋮</ytd-menu-renderer>
+              </div>
+            </ytd-rich-item-renderer>
+          </div>
+        </ytd-rich-grid-renderer>
+      </body>
+    </html>
+  `);
+  await page.addStyleTag({ path: path.resolve(__dirname, "..", "src", "content.css") });
+
+  const result = await page.locator("ytd-rich-item-renderer").evaluate((row) => {
+    const rowRect = row.getBoundingClientRect();
+    const titleRect = row.querySelector("#video-title").getBoundingClientRect();
+    const thumbnail = row.querySelector("#thumbnail");
+    const thumbnailRect = thumbnail.getBoundingClientRect();
+    const thumbnailStyle = getComputedStyle(thumbnail);
+    return {
+      titleOffset: titleRect.left - rowRect.left,
+      thumbnailSpaceVisible: thumbnailStyle.display !== "none" && thumbnailRect.width > 30 && thumbnailRect.height > 30
+    };
+  });
+
+  expect(result.thumbnailSpaceVisible).toBe(false);
+  expect(result.titleOffset).toBeLessThan(24);
+});
+
 test("home non-video game or ad cards keep bounded artwork", async () => {
   test.skip(!hasAuthProfile(), "Requires .playwright-user-profile with a logged-in YouTube session.");
 

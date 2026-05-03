@@ -14,6 +14,7 @@ async function launchWithExtension(options = {}) {
     headless: false,
     viewport: { width: 1440, height: 1000 },
     args: [
+      "--mute-audio",
       `--disable-extensions-except=${extensionPath}`,
       `--load-extension=${extensionPath}`
     ]
