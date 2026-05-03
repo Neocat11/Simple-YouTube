@@ -1062,3 +1062,173 @@ html.simple-youtube-enabled.simple-youtube-channel-tab-releases :is(
   opacity: 1 !important;
   visibility: visible !important;
 }
+
+/* Channel video-like tabs: let text and menus use the widened row. */
+html.simple-youtube-enabled:is(
+  .simple-youtube-channel-tab-videos,
+  .simple-youtube-channel-tab-streams,
+  .simple-youtube-channel-tab-podcasts
+) ytd-rich-item-renderer {
+  width: min(100%, 1100px) !important;
+  max-width: 1100px !important;
+}
+
+html.simple-youtube-enabled:is(
+  .simple-youtube-channel-tab-videos,
+  .simple-youtube-channel-tab-streams,
+  .simple-youtube-channel-tab-podcasts
+) ytd-rich-item-renderer #content {
+  justify-content: flex-start !important;
+}
+
+html.simple-youtube-enabled:is(
+  .simple-youtube-channel-tab-videos,
+  .simple-youtube-channel-tab-streams,
+  .simple-youtube-channel-tab-podcasts
+) ytd-rich-item-renderer yt-lockup-view-model {
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+}
+
+html.simple-youtube-enabled:is(
+  .simple-youtube-channel-tab-videos,
+  .simple-youtube-channel-tab-streams,
+  .simple-youtube-channel-tab-podcasts
+) ytd-rich-item-renderer #content > .lockup,
+html.simple-youtube-enabled:is(
+  .simple-youtube-channel-tab-videos,
+  .simple-youtube-channel-tab-streams,
+  .simple-youtube-channel-tab-podcasts
+) ytd-rich-item-renderer #content > yt-lockup-view-model.lockup {
+  flex: 1 1 auto !important;
+  flex-basis: 100% !important;
+  width: 100% !important;
+  max-width: 1100px !important;
+  min-width: 0 !important;
+}
+
+html.simple-youtube-enabled:is(
+  .simple-youtube-channel-tab-videos,
+  .simple-youtube-channel-tab-streams,
+  .simple-youtube-channel-tab-podcasts
+) ytd-rich-item-renderer:has(#details) #content,
+html.simple-youtube-enabled:is(
+  .simple-youtube-channel-tab-videos,
+  .simple-youtube-channel-tab-streams,
+  .simple-youtube-channel-tab-podcasts
+) ytd-rich-item-renderer .ytLockupViewModelHost {
+  width: 100% !important;
+  max-width: none !important;
+  justify-self: stretch !important;
+  grid-template-columns: minmax(220px, 1fr) 32px !important;
+}
+
+html.simple-youtube-enabled:is(
+  .simple-youtube-channel-tab-videos,
+  .simple-youtube-channel-tab-streams,
+  .simple-youtube-channel-tab-podcasts
+) ytd-rich-item-renderer .ytLockupViewModelMetadata,
+html.simple-youtube-enabled:is(
+  .simple-youtube-channel-tab-videos,
+  .simple-youtube-channel-tab-streams,
+  .simple-youtube-channel-tab-podcasts
+) ytd-rich-item-renderer yt-lockup-metadata-view-model,
+html.simple-youtube-enabled:is(
+  .simple-youtube-channel-tab-videos,
+  .simple-youtube-channel-tab-streams,
+  .simple-youtube-channel-tab-podcasts
+) ytd-rich-item-renderer .ytLockupMetadataViewModelTextContainer {
+  width: 100% !important;
+  max-width: none !important;
+}
+
+html.simple-youtube-enabled:is(
+  .simple-youtube-channel-tab-videos,
+  .simple-youtube-channel-tab-streams,
+  .simple-youtube-channel-tab-podcasts
+) ytd-rich-item-renderer .ytLockupMetadataViewModelMenuButton {
+  inset-inline-end: 0 !important;
+}
+
+html.simple-youtube-enabled:is(
+  .simple-youtube-channel-tab-videos,
+  .simple-youtube-channel-tab-streams,
+  .simple-youtube-channel-tab-podcasts
+) ytd-rich-item-renderer :is(
+  #details,
+  #meta,
+  ytd-video-meta-block,
+  .ytLockupViewModelMetadata,
+  .ytLockupMetadataViewModelTextContainer,
+  .ytLockupMetadataViewModelMetadata,
+  yt-content-metadata-view-model
+) {
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+}
+
+html.simple-youtube-enabled:is(
+  .simple-youtube-channel-tab-videos,
+  .simple-youtube-channel-tab-streams,
+  .simple-youtube-channel-tab-podcasts
+) ytd-rich-item-renderer :is(
+  #video-title,
+  h3 a,
+  .ytLockupMetadataViewModelTitle
+) {
+  width: 100% !important;
+  max-width: none !important;
+}
+
+html.simple-youtube-enabled:is(
+  .simple-youtube-channel-tab-videos,
+  .simple-youtube-channel-tab-streams,
+  .simple-youtube-channel-tab-podcasts
+) ytd-rich-item-renderer ytd-rich-grid-media[lockup] {
+  display: grid !important;
+  grid-template-columns: minmax(220px, 1fr) 40px !important;
+  align-items: center !important;
+  gap: 10px !important;
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+}
+
+html.simple-youtube-enabled:is(
+  .simple-youtube-channel-tab-videos,
+  .simple-youtube-channel-tab-streams,
+  .simple-youtube-channel-tab-podcasts
+) ytd-rich-item-renderer ytd-rich-grid-media[lockup] :is(
+  #details,
+  #meta,
+  h3,
+  ytd-video-meta-block
+) {
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+html.simple-youtube-enabled:is(
+  .simple-youtube-channel-tab-videos,
+  .simple-youtube-channel-tab-streams,
+  .simple-youtube-channel-tab-podcasts
+) ytd-rich-item-renderer ytd-rich-grid-media[lockup] #details {
+  grid-column: 1 !important;
+}
+
+html.simple-youtube-enabled:is(
+  .simple-youtube-channel-tab-videos,
+  .simple-youtube-channel-tab-streams,
+  .simple-youtube-channel-tab-podcasts
+) ytd-rich-item-renderer ytd-rich-grid-media[lockup] #menu {
+  display: flex !important;
+  grid-column: 2 !important;
+  justify-self: end !important;
+  width: 40px !important;
+  min-width: 40px !important;
+}

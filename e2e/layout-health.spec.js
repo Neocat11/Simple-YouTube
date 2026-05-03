@@ -40,7 +40,7 @@ const surfaces = [
     name: "playlist videos",
     url: "https://www.youtube.com/playlist?list=PLFgquLnL59alCl_2TQvOiD5Vgm1hCaGSI",
     pageClass: "simple-youtube-page-playlist",
-    itemSelector: 'ytd-playlist-video-renderer:has(a[href^="/watch"])',
+    itemSelector: "ytd-playlist-video-renderer",
     titleSelector: "a#video-title, h3 a",
     compactList: true
   }

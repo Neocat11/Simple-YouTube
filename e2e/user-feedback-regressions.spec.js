@@ -167,38 +167,44 @@ test("channel videos and live tabs use a wider readable row width", async () => 
       const row = page.locator('ytd-rich-item-renderer:has(a[href^="/watch"]), yt-lockup-view-model:has(a[href^="/watch"])').first();
       await expect(row).toBeVisible({ timeout: 45_000 });
       const width = await row.evaluate((item) => item.getBoundingClientRect().width);
-      expect(width).toBeGreaterThan(500);
-      expect(width).toBeLessThanOrEqual(900);
+      expect(width).toBeGreaterThan(900);
+      expect(width).toBeLessThanOrEqual(1120);
     }
   } finally {
     await context.close();
   }
 });
 
-test("channel videos and live tabs align with shorts tab row geometry", async () => {
+test("channel videos and live tabs let titles and menus follow the widened row", async () => {
   const context = await launchWithExtension();
   try {
     const page = await context.newPage();
-
-    await page.goto("https://www.youtube.com/@YouTube/shorts", { waitUntil: "domcontentloaded" });
-    const shortsRow = page.locator("ytm-shorts-lockup-view-model").first();
-    await expect(shortsRow).toBeVisible({ timeout: 45_000 });
-    const shortsRect = await shortsRow.evaluate((item) => {
-      const rect = item.getBoundingClientRect();
-      return { left: Math.round(rect.left), width: Math.round(rect.width) };
-    });
 
     for (const url of ["https://www.youtube.com/@YouTube/videos", "https://www.youtube.com/@YouTube/streams"]) {
       await page.goto(url, { waitUntil: "domcontentloaded" });
       const row = page.locator('ytd-rich-item-renderer:has(a[href^="/watch"])').first();
       await expect(row).toBeVisible({ timeout: 45_000 });
-      const rect = await row.evaluate((item) => {
-        const rect = item.getBoundingClientRect();
-        return { left: Math.round(rect.left), width: Math.round(rect.width) };
+      const result = await row.evaluate((item) => {
+        const rowRect = item.getBoundingClientRect();
+        const title = item.querySelector("#video-title, h3 a, .ytLockupMetadataViewModelTitle");
+        const textContainer = item.querySelector("#details, .ytLockupViewModelMetadata, .ytLockupMetadataViewModelTextContainer");
+        const menu = item.querySelector("#menu, ytd-menu-renderer, .ytLockupMetadataViewModelMenuButton");
+        const titleRect = title?.getBoundingClientRect();
+        const textContainerRect = textContainer?.getBoundingClientRect();
+        const menuRect = menu?.getBoundingClientRect();
+
+        return {
+          rowWidth: rowRect.width,
+          titleLeftOffset: titleRect ? titleRect.left - rowRect.left : 999,
+          textContainerWidth: textContainerRect?.width || 0,
+          menuRightGap: menuRect ? rowRect.right - menuRect.right : 999
+        };
       });
 
-      expect(Math.abs(rect.left - shortsRect.left)).toBeLessThanOrEqual(16);
-      expect(Math.abs(rect.width - shortsRect.width)).toBeLessThanOrEqual(16);
+      expect(result.rowWidth).toBeGreaterThan(900);
+      expect(result.titleLeftOffset).toBeLessThan(24);
+      expect(result.textContainerWidth).toBeGreaterThan(700);
+      expect(result.menuRightGap).toBeLessThan(340);
     }
   } finally {
     await context.close();
